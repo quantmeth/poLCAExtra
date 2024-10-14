@@ -1,0 +1,7 @@
+---
+output: github_document
+bibliography: "inst/ma.bib"
+csl: "inst/apa.csl"
+---
+
+# poLCAExtra : New and convenient functions for `poLCA`
