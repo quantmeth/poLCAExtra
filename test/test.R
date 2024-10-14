@@ -51,7 +51,7 @@ chisq.test(jd1$t~jd1$p)
 library(ggplot2)
 ggplot(jd1, mapping =aes(x = c, fill = p)) + geom_density()
 save(file = "ex1.poLCA.rda", jd)
-
+write.csv(ex1.poLCA,"ex1.poLCA.sansnom.csv", row.names = FALSE)
 
 jd$test <- rnorm(N)*5+10
 jd$test <- as.factor(sample(letters[1:3], replace = TRUE, size = N))
@@ -81,6 +81,6 @@ rez
 predict(rez, 2)
 
 
-f2 <- as.formula(cbind(V1, V2, V3, V4, V5, V6) ~ test)
-poLCA(f2, jd, nclass = 2)
+f1 <- as.formula(cbind(V1, V2, V3, V4, V5, V6) ~ test)
+poLCA(f1, jd, nclass = 1:4)
 

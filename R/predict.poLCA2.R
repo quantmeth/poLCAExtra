@@ -16,7 +16,7 @@
 predict.poLCA2 <- function(object, nclass = NULL, ...){
   
   if(is.null(nclass)) stop("Specify nclass to proceed.")
-  ncx <- sapply(x$LCA, function(w) length(w$P))
+  ncx <- sapply(object$LCA, function(w) length(w$P))
   nc <- which(nclass == ncx)
   
   
