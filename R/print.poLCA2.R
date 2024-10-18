@@ -20,7 +20,7 @@ print.poLCA2 <- function(x, digit = 3, ...) {
 
 
 printtab <- function(tab, digit = 3){
-  tab[,-7] <- round(tab[,-7], digit)
+  tab[,-6] <- round(tab[,-6], digit)
   tab$p <-  ifelse(tab$p == 0,"< .001", sprintf(paste0("%.", digit,"f"), tab$p))
   tab$Relative.Entropy <-  sprintf(paste0("%.", digit,"f"), tab$Relative.Entropy)
   tab$LMR <-  sprintf(paste0("%.", digit,"f"), tab$LMR)

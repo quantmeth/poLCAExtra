@@ -63,7 +63,9 @@ poLCA <- function(formula, data, nclass = NULL, verbose = FALSE, ...){
                         data = data,
                         nclass = maxcl, 
                         ...)
-    rez$sabic <- -2*(rez$llik)+rez$npar*log(rez$Nobs+2)
+    rez$sabic <- -2*(rez$llik) + rez$npar * log((rez$Nobs+2)/24)
+    rez$caic <- -2*(rez$llik) + rez$npar * log(rez$Nobs+1)
+    rez$aic3 <- -2*(rez$llik) + 3 * rez$npar
     rez$data <- data
     
   }

@@ -12,13 +12,11 @@
 \item{...}{Further arguments for other methods, ignored for "poLCA2".}
 }
 \value{
-Return a table with relevant
+Return a table with relevant.
 }
 \description{
 Summary method for "poLCA2" objects
 }
-\examples{
-f1 <- as.formula(cbind(V1, V2, V3, V4, V5, V6) ~ 1)
-out <- poLCA(f1, nclass = 1:3, data = ex1.poLCA)
-summary(out)
+\note{
+Should not be called directly
 }

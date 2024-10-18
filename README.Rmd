@@ -48,9 +48,12 @@ This new version of `poLCA` can also handle many number of classes and yield the
 
 ```{r, warning = FALSE, comment = FALSE, message = FALSE, results = FALSE}
 LCAE <- poLCA(f1, data = jd, nclass = 1:4)
+LCAE
 ```
 
-The `plot()` function has been updated to account for the multiple LCA.
+Both previous table can be easily exported.
+
+The original `plot()` (for `poLCA`) function has been updated to account for the multiple LCA.
 
 ```{r plotLCA}
 plot(LCAE, nclass = 3)
@@ -58,10 +61,12 @@ plot(LCAE, nclass = 3)
 
 # New features
 
-The `SABIC` statistic has been added to `poLCA`.
+The `SABIC`, `CAIC`, and `AIC3` statistics have been added to `poLCA`.
 
-```{r savic}
+```{r sabic}
 LCA3$sabic
+LCA3$caic
+LCA3$aic3
 ```
 
 The Lo-Mendell-Rubin statistic has been added.
@@ -80,21 +85,21 @@ Predicted probabilities and classes
 
 ```{r predict}
 head(round(predict(LCA3), 3))
-head(round(predict(LCAE, nclass = 3),3))
+# head(round(predict(LCAE, nclass = 3),3))
 ```
 
 Tech10 (in reference to Mplus) to investigate local independence.
 
 ```{r tech10}
 poLCA.tech10(LCA3)
-poLCA.residual.pattern(LCAE, nclass = 3)
+# poLCA.residual.pattern(LCAE, nclass = 3)
 ```
 
 Residual covariances
 
 ```{r rescov}
 poLCA.residual.cov(LCAE, nclass = 3)
-poLCA.residual.cov(LCA3)
+# poLCA.residual.cov(LCA3)
 ```
 
 Bootstrap 3-step approach
@@ -102,9 +107,10 @@ Bootstrap 3-step approach
 ```{r 3step}
 # Tester des variables supplémentaires
 d3step("categorical", LCAE, nclass = 3)
-d3step("categorical", LCA3)
+# d3step("categorical", LCA3)
+
 r3step("continuous", LCAE, nclass = 3)
-r3step("continuous", LCA3)
+# r3step("continuous", LCA3)
 ```
 The 3-step approches will be improved.
 

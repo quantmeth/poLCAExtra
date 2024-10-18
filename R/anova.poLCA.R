@@ -8,9 +8,9 @@
 #'
 #' @examples
 #' f1 <- as.formula(cbind(V1, V2, V3, V4, V5, V6) ~ 1)
-#' LCA1 <- poLCA::poLCA(f1, data = jd, nclass = 1) 
-#' LCA2 <- poLCA::poLCA(f1, data = jd, nclass = 2)
-#' LCA3 <- poLCA::poLCA(f1, data = jd, nclass = 3)
+#' LCA1 <- poLCA::poLCA(f1, data = ex1.poLCA, nclass = 1) 
+#' LCA2 <- poLCA::poLCA(f1, data = ex1.poLCA, nclass = 2)
+#' LCA3 <- poLCA::poLCA(f1, data = ex1.poLCA, nclass = 3)
 #' anova(LCA3, LCA2, LCA1)
 anova.poLCA <- function(object, ...){
   
