@@ -2,7 +2,7 @@
 % Please edit documentation in R/print.poLCA2.R
 \name{print.poLCA2}
 \alias{print.poLCA2}
-\title{Print results of poLCA2}
+\title{Print results of poLCA2 objects}
 \usage{
 \method{print}{poLCA2}(x, digit = 3, ...)
 }
@@ -17,7 +17,7 @@
 No return value, called for side effects.
 }
 \description{
-Print results of poLCA2
+Print results of poLCA2 objects
 }
 \examples{
 f1 <- as.formula(cbind(V1, V2, V3, V4, V5, V6) ~ 1)

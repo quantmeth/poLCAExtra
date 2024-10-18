@@ -2,7 +2,7 @@
 % Please edit documentation in R/predict.poLCA2.R
 \name{predict.poLCA2}
 \alias{predict.poLCA2}
-\title{Predict method for poLCA object}
+\title{Predict method for poLCA and poLCA2 objects}
 \usage{
 \method{predict}{poLCA2}(object, nclass = NULL, ...)
 }

@@ -1,6 +1,6 @@
 Package: poLCAExtra
 Type: Package
-Title: Convenience Functions for Package 'poLCA'
+Title: New and Convenient Functions for the Package 'poLCA'
 Version: 0.0.1
 Authors@R:
     c(person(given = "P.-O.",

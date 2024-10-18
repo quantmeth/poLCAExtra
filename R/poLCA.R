@@ -42,26 +42,16 @@ poLCA <- function(formula, data, nclass = NULL, verbose = FALSE, ...){
   
   if(length(maxcl) > 1){
     mod <- sapply(as.list(maxcl), 
-                  poLCA::poLCA, 
+                  poLCA, 
                   data = data, #data
                   # maxiter = maxiter, #maxiter #### TODO #### 
                   formula = formula, # formula
                   verbose = verbose, #) #... ####
                   ...)  
+
+    class(mod) <- "poLCA2"
     
-    
-    rez <- data.frame(nclass = maxcl,
-                      df = sapply(mod, function(x) x$resid.df),
-                      llike = sapply(mod, function(x) x$llik),
-                      AIC = sapply(mod, function(x) x$aic),
-                      BIC = sapply(mod, function(x) x$bic),
-                      `Classes size` = sapply(mod, function(x) paste0(sort(table(x$predclass)), collapse = "|")),
-                      Entropy = sapply(mod, poLCA.entropy), #entropie
-                      `Relative Entropy` = sapply(mod, poLCA.relentropy),
-                      LMR = sapply(mod, poLCA.clrt, y = mod, stat = "lmr"),
-                      p = sapply(mod, poLCA.clrt, y = mod, stat = "lmr.p"))
-    
-    rez <- list(output = rez, 
+    rez <- list(output = summary(mod), 
                 data = data,
                 LCA = mod)
     
@@ -71,7 +61,9 @@ poLCA <- function(formula, data, nclass = NULL, verbose = FALSE, ...){
     
     rez <- poLCA::poLCA(formula = formula, 
                         data = data,
-                        nclass = maxcl, ...)
+                        nclass = maxcl, 
+                        ...)
+    rez$sabic <- -2*(rez$llik)+rez$npar*log(rez$Nobs+2)
     rez$data <- data
     
   }
@@ -82,18 +74,6 @@ poLCA <- function(formula, data, nclass = NULL, verbose = FALSE, ...){
   return(rez)
 }
 
-
-poLCA.clrt <- function(x, y, stat = c("lmr", "lmr.p")){
-  #length(y)
-  ncx <- sapply(y, function(w) length(w$P))
-  nc <- which(length(x$P) == ncx)
-  #nc <- length(x$P)
-  if (nc == 1){
-    NaN
-  } else {
-    poLCA.lrt(y[[nc-1]], x)[[stat]]
-  }
-}
 
 poLCA.maxclasses <- function(x){
   N <- nrow(x)

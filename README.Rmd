@@ -4,4 +4,112 @@ bibliography: "inst/ma.bib"
 csl: "inst/apa.csl"
 ---
 
-# poLCAExtra : New and convenient functions for `poLCA`
+```{r setup, include = FALSE, warning = FALSE, comment = FALSE}
+#library(poLCAExtra)
+devtools::load_all()
+```
+
+# poLCAExtra : New and convenient functions to improve workflow of `poLCA`
+
+The library `poLCAExtra` offers convenient functions to improve the workflow of [`poLCA`](https://github.com/dlinzer/poLCA)[@poLCA]
+
+```{r github, echo = TRUE, eval = FALSE}
+# Current development version
+remotes::install_github(repo = "quantmeth/poLCA")
+```
+
+# Comparing many latent class models
+
+Either by using many latent
+
+```{r LCA, warning = FALSE, comment = FALSE, message = FALSE, results = FALSE}
+# poLCAExtra has two data sets examples
+jd <- ex1.poLCA
+
+# Formula
+f1 <- as.formula(cbind(V1, V2, V3, V4, V5, V6) ~ 1)
+
+# Four latent classes analysis of increasing classes
+LCA1 <- poLCA(f1, data = jd, nclass = 1, verbose = FALSE) 
+LCA2 <- poLCA(f1, data = jd, nclass = 2, verbose = FALSE)
+LCA3 <- poLCA(f1, data = jd, nclass = 3, verbose = FALSE)
+LCA4 <- poLCA(f1, data = jd, nclass = 4, maxiter = 1000, nrep = 10, verbose = FALSE)
+```
+
+They can be compared with.
+
+```{r CompareLCA}
+anova(LCA1, LCA2, LCA3, LCA4)
+```
+
+The function readily gathers all relevant statitics to choose the number of classes.
+
+This new version of `poLCA` can also handle many number of classes and yield the same output.
+
+```{r, warning = FALSE, comment = FALSE, message = FALSE, results = FALSE}
+LCAE <- poLCA(f1, data = jd, nclass = 1:4)
+```
+
+The `plot()` function has been updated to account for the multiple LCA.
+
+```{r plotLCA}
+plot(LCAE, nclass = 3)
+```
+
+# New features
+
+The `SABIC` statistic has been added to `poLCA`.
+
+```{r savic}
+LCA3$sabic
+```
+
+The Lo-Mendell-Rubin statistic has been added.
+
+```{r lmr}
+poLCA.lmr(LCA3)
+```
+
+The relative entropy, which is more often requested than the entropy, has been added.
+
+```{r re}
+poLCA.relentropy(LCA3)
+```
+
+Predicted probabilities and classes
+
+```{r predict}
+head(round(predict(LCA3), 3))
+head(round(predict(LCAE, nclass = 3),3))
+```
+
+Tech10 (in reference to Mplus) to investigate local independence.
+
+```{r tech10}
+poLCA.tech10(LCA3)
+poLCA.residual.pattern(LCAE, nclass = 3)
+```
+
+Residual covariances
+
+```{r rescov}
+poLCA.residual.cov(LCAE, nclass = 3)
+poLCA.residual.cov(LCA3)
+```
+
+Bootstrap 3-step approach
+
+```{r 3step}
+# Tester des variables supplémentaires
+d3step("categorical", LCAE, nclass = 3)
+d3step("categorical", LCA3)
+r3step("continuous", LCAE, nclass = 3)
+r3step("continuous", LCA3)
+```
+The 3-step approches will be improved.
+
+# How to cite
+
+Caron, P.-O. (2024). *poLCAExtra : New and Convenient Functions for the Package 'poLCA'*. https://github.com/quantmeth/poLCAExtra
+
+# References

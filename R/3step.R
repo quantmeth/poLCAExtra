@@ -1,6 +1,5 @@
 #' Bootstraped 3 step testing of latent class analysis
 #'
-#'
 #' @param formula Either a vector containing a string indicating the dependent variable to test or an object of class "formula". The details of model specification are given under ‘Details’
 #' @param x Object of class inheriting from "poLCA" or "poLCA2".
 #' @param nclass f \code{object} contains many "poLCA" object (i.e., if it a "poLCA2" object), choose the model with the given number of classes.
@@ -9,7 +8,6 @@
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @return A list containing the comparison indices in a vector and an array containing the conditional median and confidence interval of each classes.
-#' 
 #' 
 #' @details Some examples of formula :
 #' \itemize{
@@ -26,7 +24,6 @@
 #' @import stats
 #' @import utils
 #' 
-#'
 #' @examples
 #' f1 <- as.formula(cbind(V1, V2, V3, V4, V5, V6) ~ 1)
 #' out <- poLCA(f1, nclass = 1:3, data = ex1.poLCA)

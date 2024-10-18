@@ -1,4 +1,4 @@
-#' Predict method for poLCA object
+#' Predict method for poLCA and poLCA2 objects
 #' 
 #' @description Get probabilities of each subject to be in a given class and the most likely class.
 #'
@@ -28,7 +28,8 @@ predict.poLCA2 <- function(object, nclass = NULL, ...){
   return(probs)
 }
 
-predict.poLCA <- function(object){
+#' @export
+predict.poLCA <- function(object, ...){
   probs <- as.data.frame(cbind(object$posterior, 
                                object$predclass))
   colnames(probs) <- c(paste0("Pr(Class==", 1:length(object$P),")"),"Pred")
