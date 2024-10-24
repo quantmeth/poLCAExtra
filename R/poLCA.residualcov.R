@@ -6,8 +6,9 @@
 #' @return A list of residual covariance matices.
 #' @export
 #'
+#' @importFrom psych polychoric
 #' @examples
-#' f1 <- as.formula(cbind(V1, V2, V3, V4, V5, V6) ~ 1)
+#' f1 <- cbind(V1, V2, V3, V4, V5, V6) ~ 1
 #' out <- poLCA(f1, nclass = 3, data = ex1.poLCA)
 #' poLCA.residual.cov(out)
 poLCA.residual.cov <- function(x, nclass = NULL){
@@ -16,10 +17,11 @@ poLCA.residual.cov <- function(x, nclass = NULL){
   if(!any(c(inherits(x, "poLCA2"), inherits(x, "poLCA")))) stop("This function needs an object of class 'poLCA' or 'poLCA2'.")
   if(inherits(x, "poLCA2")) x <- x$LCA[[nclass]]
   
-  S <- cov(x$y)
+  #S <- cov(x$y)
+  S <- psych::polychoric(x$y)$rho
   pc <- predict.poLCA(x)$Pred # predicted class
   test <- as.data.frame(cbind(pc, x$y))
-  out <- by(test[-1], test$pc, function(x, S) {S-cov(x)}, S)
+  out <- by(test[-1], test$pc, function(x, S) {S-psych::polychoric(x)$rho}, S)
   names(out) <- paste0("Residual covariance matrix of Class == ",1:length(out))
   for(i in 1:length(out)){
     cat("\n",names(out)[i],"\n \n")

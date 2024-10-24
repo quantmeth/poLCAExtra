@@ -106,13 +106,27 @@ Bootstrap 3-step approach
 
 ```{r 3step}
 # Tester des variables supplémentaires
-d3step("categorical", LCAE, nclass = 3)
+d3 <- d3step("categorical", LCAE, nclass = 3)
 # d3step("categorical", LCA3)
 
-r3step("continuous", LCAE, nclass = 3)
+r3 <- r3step("continuous", LCAE, nclass = 3)
 # r3step("continuous", LCA3)
 ```
 The 3-step approches will be improved.
+
+d3step plot
+
+```{r d3stepplot}
+plot(d3, ci = c(.05,.95))
+```
+
+r3step plot
+
+```{r r3stepplot}
+plot(r3, ci = c(.05, .95))
+```
+
+
 
 # How to cite
 

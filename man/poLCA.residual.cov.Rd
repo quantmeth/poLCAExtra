@@ -18,7 +18,7 @@ A list of residual covariance matices.
 Inspect residual covariances of each class.
 }
 \examples{
-f1 <- as.formula(cbind(V1, V2, V3, V4, V5, V6) ~ 1)
+f1 <- cbind(V1, V2, V3, V4, V5, V6) ~ 1
 out <- poLCA(f1, nclass = 3, data = ex1.poLCA)
 poLCA.residual.cov(out)
 }

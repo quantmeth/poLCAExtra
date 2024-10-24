@@ -30,7 +30,7 @@ poLCA(formula, data, nclass = NULL, verbose = FALSE, ...)
 #' \code{poLCA} is an adaptation of the eponym function in the package \code{poLCA} to account for many models simultaneously
 }
 \examples{
-f1 <- as.formula(cbind(V1, V2, V3, V4, V5, V6) ~ 1)
+f1 <- cbind(V1, V2, V3, V4, V5, V6) ~ 1
 poLCA(f1, nclass = 1:3, data = ex1.poLCA)
 }
 \references{

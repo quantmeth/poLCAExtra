@@ -16,5 +16,7 @@ RoxygenNote: 7.2.3
 Imports:
   poLCA (>= 1.6.0.0),
   nnet (>= 7.3-18),
-  MASS (>= 7.3)
+  MASS (>= 7.3),
+  ggplot2 (>= 3.5),
+  psych (>= 2.4.6.26)
   

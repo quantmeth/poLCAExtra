@@ -14,13 +14,13 @@
 \item{...}{additional arguments affecting the predictions produced.}
 }
 \value{
-A data frame with the probabilities of each subject to be in each classes and predicted classes.
+A data frame with the probabilities of each subject to be in each classes and the predicted classes.
 }
 \description{
 Get probabilities of each subject to be in a given class and the most likely class.
 }
 \examples{
-f1 <- as.formula(cbind(V1, V2, V3, V4, V5, V6) ~ 1)
+f1 <- cbind(V1, V2, V3, V4, V5, V6) ~ 1
 out <- poLCA(f1, nclass = 1:3, data = ex1.poLCA)
 predict(out, nclass = 3)
 }

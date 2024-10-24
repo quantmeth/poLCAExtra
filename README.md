@@ -36,13 +36,13 @@ anova(LCA1, LCA2, LCA3, LCA4)
 
     ##   nclass df     llike      AIC      BIC  Classes.size Entropy Relative.Entropy
     ## 1      1 57 -2687.896 5387.793 5415.900           800   3.360                 
-    ## 2      2 50 -2365.285 4756.570 4817.470       373|427   2.957            0.803
+    ## 2      2 50 -2463.806 4953.612 5014.512        98|702   3.082            0.897
     ## 3      3 43 -2195.821 4431.642 4525.334   101|345|354   2.746            0.840
     ## 4      4 36 -2190.270 4434.540 4561.025 49|73|324|354   2.736            0.871
     ##       LMR      p
     ## 1               
-    ## 2 614.576 < .001
-    ## 3 322.830 < .001
+    ## 2 426.893 < .001
+    ## 3 510.513 < .001
     ## 4  10.574  0.158
 
 The function readily gathers all relevant statitics to choose the number
@@ -96,16 +96,16 @@ poLCA.lmr(LCA3)
 ```
 
     ## $vlmr
-    ## [1] 338.9282
+    ## [1] 535.9702
     ## 
     ## $lmr
-    ## [1] 322.83
+    ## [1] 510.513
     ## 
     ## $df
     ## [1] 7
     ## 
     ## $lmr.p
-    ## [1] 8.005233e-66
+    ## [1] 4.401763e-106
 
 The relative entropy, which is more often requested than the entropy,
 has been added.
@@ -114,7 +114,7 @@ has been added.
 poLCA.relentropy(LCA3)
 ```
 
-    ## [1] 0.8396915
+    ## [1] 0.8396914
 
 Predicted probabilities and classes
 
@@ -123,12 +123,12 @@ head(round(predict(LCA3), 3))
 ```
 
     ##   Pr(Class==1) Pr(Class==2) Pr(Class==3) Pred
-    ## 1        0.039        0.004        0.957    3
-    ## 2        0.020        0.003        0.977    3
-    ## 3        0.000        0.005        0.994    3
-    ## 4        0.020        0.003        0.977    3
-    ## 5        0.455        0.001        0.543    3
-    ## 6        0.638        0.001        0.362    1
+    ## 1        0.957        0.039        0.004    1
+    ## 2        0.977        0.020        0.003    1
+    ## 3        0.994        0.000        0.005    1
+    ## 4        0.977        0.020        0.003    1
+    ## 5        0.543        0.455        0.001    1
+    ## 6        0.362        0.638        0.001    2
 
 ``` r
 # head(round(predict(LCAE, nclass = 3),3))
@@ -181,12 +181,12 @@ poLCA.residual.cov(LCAE, nclass = 3)
     ##  Residual covariance matrix of Class == 1 
     ##  
     ##       V1    V2    V3    V4    V5    V6
-    ## V1 0.083 0.029 0.021 0.054 0.028 0.059
-    ## V2 0.029 0.121 0.162 0.012 0.165 0.024
-    ## V3 0.021 0.162 0.086 0.018 0.104 0.025
-    ## V4 0.054 0.012 0.018 0.134 0.014 0.064
-    ## V5 0.028 0.165 0.104 0.014 0.100 0.015
-    ## V6 0.059 0.024 0.025 0.064 0.015 0.096
+    ## V1 0.067 0.033 0.026 0.056 0.027 0.060
+    ## V2 0.033 0.244 0.132 0.011 0.138 0.019
+    ## V3 0.026 0.132 0.161 0.014 0.142 0.011
+    ## V4 0.056 0.011 0.014 0.026 0.026 0.057
+    ## V5 0.027 0.138 0.142 0.026 0.143 0.034
+    ## V6 0.060 0.019 0.011 0.057 0.034 0.041
     ## 
     ##  Residual covariance matrix of Class == 2 
     ##  
@@ -201,12 +201,12 @@ poLCA.residual.cov(LCAE, nclass = 3)
     ##  Residual covariance matrix of Class == 3 
     ##  
     ##       V1    V2    V3    V4    V5    V6
-    ## V1 0.067 0.033 0.026 0.056 0.027 0.060
-    ## V2 0.033 0.244 0.132 0.011 0.138 0.019
-    ## V3 0.026 0.132 0.161 0.014 0.142 0.011
-    ## V4 0.056 0.011 0.014 0.026 0.026 0.057
-    ## V5 0.027 0.138 0.142 0.026 0.143 0.034
-    ## V6 0.060 0.019 0.011 0.057 0.034 0.041
+    ## V1 0.083 0.029 0.021 0.054 0.028 0.059
+    ## V2 0.029 0.121 0.162 0.012 0.165 0.024
+    ## V3 0.021 0.162 0.086 0.018 0.104 0.025
+    ## V4 0.054 0.012 0.018 0.134 0.014 0.064
+    ## V5 0.028 0.165 0.104 0.014 0.100 0.015
+    ## V6 0.059 0.024 0.025 0.064 0.015 0.096
 
 ``` r
 # poLCA.residual.cov(LCA3)
@@ -216,53 +216,30 @@ Bootstrap 3-step approach
 
 ``` r
 # Tester des variables supplémentaires
-d3step("categorical", LCAE, nclass = 3)
-```
-
-    ## $stats
-    ##            LR           AIC            df             p 
-    ##  1.648482e+01 -1.248482e+01  2.000000e+00  9.050782e-04 
-    ## 
-    ## $M
-    ## , , 2.5%
-    ## 
-    ##                    Pr(Class==1) Pr(Class==2) Pr(Class==3)
-    ## Pr(categorical==0)    0.4321936    0.2896893    0.2916190
-    ## Pr(categorical==1)    0.5364805    0.6516695    0.6790153
-    ## 
-    ## , , 50%
-    ## 
-    ##                    Pr(Class==1) Pr(Class==2) Pr(Class==3)
-    ## Pr(categorical==0)    0.4476304    0.3183963    0.3062226
-    ## Pr(categorical==1)    0.5523696    0.6816037    0.6937774
-    ## 
-    ## , , 97.5%
-    ## 
-    ##                    Pr(Class==1) Pr(Class==2) Pr(Class==3)
-    ## Pr(categorical==0)    0.4635195    0.3483305    0.3209847
-    ## Pr(categorical==1)    0.5678064    0.7103107    0.7083810
-
-``` r
+d3 <- d3step("categorical", LCAE, nclass = 3)
 # d3step("categorical", LCA3)
 
-r3step("continuous", LCAE, nclass = 3)
-```
-
-    ## $stats
-    ##            LR           AIC            df            R2             p 
-    ##  1.150342e+01 -1.900683e+01  2.000000e+00  2.833514e-02  7.237379e-05 
-    ## 
-    ## $M
-    ##       Pr(Class==1) Pr(Class==2) Pr(Class==3)
-    ## 2.5%      23.74267     20.79426     21.47949
-    ## 50%       24.01165     21.19266     21.71723
-    ## 97.5%     24.27648     21.65222     21.95221
-
-``` r
+r3 <- r3step("continuous", LCAE, nclass = 3)
 # r3step("continuous", LCA3)
 ```
 
 The 3-step approches will be improved.
+
+d3step plot
+
+``` r
+plot(d3, ci = c(.05,.95))
+```
+
+![](README_files/figure-gfm/d3stepplot-1.png)<!-- -->
+
+r3step plot
+
+``` r
+plot(r3, ci = c(.05, .95))
+```
+
+![](README_files/figure-gfm/r3stepplot-1.png)<!-- -->
 
 # How to cite
 

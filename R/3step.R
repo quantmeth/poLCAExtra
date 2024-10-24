@@ -1,4 +1,4 @@
-#' Bootstraped 3 step testing of latent class analysis
+#' Bootstraped 3-step testing of latent class analysis
 #'
 #' @param formula Either a vector containing a string indicating the dependent variable to test or an object of class "formula". The details of model specification are given under ‘Details’
 #' @param x Object of class inheriting from "poLCA" or "poLCA2".
@@ -25,7 +25,7 @@
 #' @import utils
 #' 
 #' @examples
-#' f1 <- as.formula(cbind(V1, V2, V3, V4, V5, V6) ~ 1)
+#' f1 <- cbind(V1, V2, V3, V4, V5, V6) ~ 1
 #' out <- poLCA(f1, nclass = 1:3, data = ex1.poLCA)
 #' r3step("continuous", out, nclass = 3)
 #' d3step("categorical", out, nclass = 3)
@@ -66,9 +66,12 @@ d3step <- function(formula, x, nclass = NULL, nreps = 1000, alpha = .05, ...){
   f0 <- as.formula(paste0(v, " ~ ",  paste0(c(1, all.vars(formula) [all.vars(formula) != "classes"][-1]), collapse = "+"))) 
   f1 <- as.formula(paste0(c(f0," + classes"), collapse = ""))
   
+  out <- list()
+  
   #
   if(is.factor(D[,v])) {
     
+    cla <- "d3step"
     # ls <- sapply(D[v], unique)
     # ls[names(ls) != "classes"] <- 0
     # ls <- as.data.frame(expand.grid(ls))
@@ -80,7 +83,7 @@ d3step <- function(formula, x, nclass = NULL, nreps = 1000, alpha = .05, ...){
     
     #
     res <- matrix(NA, ncol = 4, nrow = nreps)
-    M <- array(dim=c(nclass, dim(unique(D[v]))[1], nreps))
+    M <- array(dim = c(nclass, dim(unique(D[v]))[1], nreps))
     
     for(i in 1:nreps){
       D$classes <- as.factor(rowSums(test < matrix(runif(N), ncol = ncol(test), N)) + 1)
@@ -96,10 +99,10 @@ d3step <- function(formula, x, nclass = NULL, nreps = 1000, alpha = .05, ...){
       
       
       if(dim(unique(D[v]))[1] > 2){
-        M[,,i] <- predict(r1, newdata = data.frame(classes = levels(D$classes)), type="probs")
+        M[,,i] <- predict(r1, newdata = data.frame(classes = levels(D$classes)), type = "probs")
       }else{
-        pr <- predict(r1, newdata = data.frame(classes = levels(D$classes)), type="probs")
-        M[,,i] <- cbind(1-pr,pr)
+        pr <- predict(r1, newdata = data.frame(classes = levels(D$classes)), type = "probs")
+        M[,,i] <- cbind(1-pr, pr)
       }
       #M[,,i] <-  predict(r, newdata = ls$classes, type="probs")
       #prob_df <- data.frame(D[v], predict(r1, newdata = D, type = "probs"))
@@ -117,21 +120,23 @@ d3step <- function(formula, x, nclass = NULL, nreps = 1000, alpha = .05, ...){
     }
     
     
+    stats <- colMeans(res)   
+    names(stats) <-  c("LR", "AIC", "df", "p")
+    
     colnames(M) <- c(paste0("Pr(",v,"==", 
                             levels(D[,v]),
                             ")"))
     rownames(M) <- c(paste0("Pr(Class==", 1:nclass,")"))
-    
-    stats <- colMeans(res)   
-    names(stats) <-  c("LR", "AIC", "df", "p")
-    
-    M <- apply(M, 1:2, quantile, probs=c(alpha/2,.5,1-alpha/2))
-    M <- aperm(M,c(3,2,1))
-    
+    btstrp <- M
+    M <- apply(M, 1:2, quantile, probs=c(alpha/2, .5 , 1-alpha/2))
+    #M <- aperm(M, c(3,2,1))
+    M <- aperm(M, c(2,1,3))
   } else{
     
+    cla <- "r3step"
+    
     res <- matrix(NA, ncol = (5), nrow = nreps)
-    M <-  array(dim=c(nclass, 1, nreps))
+    M <-  array(dim = c(nclass, nreps))
     
     
     for(i in 1:nreps){
@@ -144,7 +149,7 @@ d3step <- function(formula, x, nclass = NULL, nreps = 1000, alpha = .05, ...){
       h1 <- lm(f1, data = D)
       
       
-      rs <- anova(h0,h1)
+      rs <- anova(h0, h1)
       res[i,] <- c(LR = (logLik(h1) - logLik(h0))[1],
                    AIC = AIC(h1) - AIC(h0),
                    df = (summary(h1)$df - summary(h0)$df)[1],
@@ -160,7 +165,7 @@ d3step <- function(formula, x, nclass = NULL, nreps = 1000, alpha = .05, ...){
       # r <- aov(data = D, formula = formula)
       # rs <- summary(r)[[1]]
       # 
-      M[,,i] <- predict(h1, data.frame(classes = levels(D$classes)))
+      M[,i] <- predict(h1, data.frame(classes = levels(D$classes)))
       
       
       # r$coefficients
@@ -173,11 +178,21 @@ d3step <- function(formula, x, nclass = NULL, nreps = 1000, alpha = .05, ...){
     
     stats <- colMeans(res)
     names(stats) <-  c("LR", "AIC", "df","R2","p")
-    M <- apply(M, 1, quantile, probs=c(alpha/2,.5,1-alpha/2))
-    colnames(M) <- c(paste0("Pr(Class==", 1:nclass,")"))
+    rownames(M) <- c(paste0("Pr(Class==", 1:nclass,")"))
+    btstrp <- M
+    M <- apply(M, 1, quantile, probs=c(alpha/2, .5, 1-alpha/2))
+    #colnames(M) <- c(paste0("Pr(Class==", 1:nclass,")"))
+    M <- t(M)
   }
   
-  return(list(stats = stats, M = M))
+  out <- list(stats = stats, 
+       M = M, 
+       DV = v,
+       btstrp = btstrp)
+  
+  class(out) <- cla
+  
+  return(out)
   
 }
 

@@ -3,7 +3,7 @@
 \name{d3step}
 \alias{d3step}
 \alias{r3step}
-\title{Bootstraped 3 step testing of latent class analysis}
+\title{Bootstraped 3-step testing of latent class analysis}
 \usage{
 d3step(formula, x, nclass = NULL, nreps = 1000, alpha = 0.05, ...)
 
@@ -26,7 +26,7 @@ r3step(formula, x, nclass = NULL, nreps = 1000, alpha = 0.05, ...)
 A list containing the comparison indices in a vector and an array containing the conditional median and confidence interval of each classes.
 }
 \description{
-Bootstraped 3 step testing of latent class analysis
+Bootstraped 3-step testing of latent class analysis
 }
 \details{
 Some examples of formula :
@@ -37,7 +37,7 @@ Some examples of formula :
 d3step and r3step is the same function. It will detect automatically if \code{DV} is a factor (d3step) or continuous (r3step).
 }
 \examples{
-f1 <- as.formula(cbind(V1, V2, V3, V4, V5, V6) ~ 1)
+f1 <- cbind(V1, V2, V3, V4, V5, V6) ~ 1
 out <- poLCA(f1, nclass = 1:3, data = ex1.poLCA)
 r3step("continuous", out, nclass = 3)
 d3step("categorical", out, nclass = 3)

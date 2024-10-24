@@ -16,7 +16,6 @@
 #'   \item \code{LCA} - A list of objects of class "poLCA" (\code{poLCA} model)
 #' }
 #' 
-#' 
 #' @author 
 #' P.-O. Caron
 #' 
@@ -29,7 +28,7 @@
 #' @export
 #'
 #' @examples
-#' f1 <- as.formula(cbind(V1, V2, V3, V4, V5, V6) ~ 1)
+#' f1 <- cbind(V1, V2, V3, V4, V5, V6) ~ 1
 #' poLCA(f1, nclass = 1:3, data = ex1.poLCA)
 poLCA <- function(formula, data, nclass = NULL, verbose = FALSE, ...){
   
@@ -62,6 +61,7 @@ poLCA <- function(formula, data, nclass = NULL, verbose = FALSE, ...){
     rez <- poLCA::poLCA(formula = formula, 
                         data = data,
                         nclass = maxcl, 
+                        verbose = verbose,
                         ...)
     rez$sabic <- -2*(rez$llik) + rez$npar * log((rez$Nobs+2)/24)
     rez$caic <- -2*(rez$llik) + rez$npar * log(rez$Nobs+1)

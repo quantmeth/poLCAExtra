@@ -20,6 +20,6 @@ No return value, called for side effects.
 Print results of poLCA2 objects
 }
 \examples{
-f1 <- as.formula(cbind(V1, V2, V3, V4, V5, V6) ~ 1)
+f1 <- cbind(V1, V2, V3, V4, V5, V6) ~ 1
 poLCA(f1, nclass = 1:3, data = ex1.poLCA)
 }
