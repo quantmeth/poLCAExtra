@@ -15,7 +15,7 @@ The library `poLCAExtra` offers convenient functions to improve the workflow of 
 
 ```{r github, echo = TRUE, eval = FALSE}
 # Current development version
-remotes::install_github(repo = "quantmeth/poLCA")
+remotes::install_github(repo = "quantmeth/poLCAExtra")
 ```
 
 # Comparing many latent class models
