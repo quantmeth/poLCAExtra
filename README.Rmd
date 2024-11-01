@@ -7,6 +7,7 @@ csl: "inst/apa.csl"
 ```{r setup, include = FALSE, warning = FALSE, comment = FALSE}
 #library(poLCAExtra)
 devtools::load_all()
+set.seed(42)
 ```
 
 # poLCAExtra : New and convenient functions to improve workflow of `poLCA`
