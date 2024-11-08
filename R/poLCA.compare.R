@@ -1,3 +1,23 @@
+#' Compare the statistics of an poLCA2 object
+#'
+#' @param x An poLCA2 object.
+#' @param stat The desired statistics to compare. Default is "AIC". It can be also "BIC", "saBIC", "CAIC" or "AIC3".
+#' @param alpha The significance threshold. 
+#'
+#' @return A data frame with 
+#' \itemize{
+#'   \item \code{The classes comparison} - which nclass are compared.
+#'   \item \code{chisq} - The chi square.
+#'   \item \code{df} - The degree of freedom.
+#'   \item \code{p} - The p-value.
+#'   \item \code{remark} - A note indicating if it a significant decrease, a significant increase or no statistical difference based on \code{alpha}.
+#' }
+#' @export
+#'
+#' @examples
+#' f1 <- cbind(V1, V2, V3, V4, V5, V6) ~ 1
+#' LCAE <- poLCA(f1, nclass = 1:3, data = ex1.poLCA)
+#' poLCA.compare(LCAE)
 poLCA.compare <- function(x, stat = "AIC", alpha = .05){
   
   stat <- tolower(stat)

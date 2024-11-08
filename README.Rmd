@@ -62,6 +62,8 @@ plot(LCAE, nclass = 3)
 
 # New features
 
+## New indices
+
 The `SABIC`, `CAIC`, and `AIC3` statistics have been added to `poLCA`.
 
 ```{r sabic}
@@ -82,12 +84,16 @@ The relative entropy, which is more often requested than the entropy, has been a
 poLCA.relentropy(LCA3)
 ```
 
+## A `predict()` function
+
 Predicted probabilities and classes
 
 ```{r predict}
 head(round(predict(LCA3), 3))
 # head(round(predict(LCAE, nclass = 3),3))
 ```
+
+## A function to verify LCA assumptions
 
 Tech10 (in reference to Mplus) to investigate local independence.
 
@@ -99,11 +105,12 @@ poLCA.tech10(LCA3)
 Residual covariances
 
 ```{r rescov}
-poLCA.residual.cov(LCAE, nclass = 3)
+# TODO
+# poLCA.residual.cov(LCAE, nclass = 3)
 # poLCA.residual.cov(LCA3)
 ```
 
-Bootstrap 3-step approach
+## Bootstrap 3-step approach
 
 ```{r 3step}
 # Tester des variables supplémentaires

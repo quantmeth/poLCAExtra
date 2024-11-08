@@ -39,15 +39,25 @@ poLCA.residual.pattern <- function(x, nclass = NULL, alpha = .05){
                           llik.contribution = llikc,
                           p = p,
                           check = ifelse(p < alpha/2, "*",""))
-  pr <- rez <- pr[order(-pr$observed),]
-  
-  pr[2:7] <- round(pr[2:7], 3) 
-  cat("\nThe 20 most frequent patterns\n\n")
-  print(pr[1:20,])
-  cat("\nNumber of empty cells: ",missing.cell,"\n")
-  return(output = invisible(rez))
+  rez <- pr[order(-pr$observed),]
+  rez <- list(output = rez,
+              npattern = npattern,
+              missing.cell = missing.cell)
+  class(rez) <- "tech10"
+  return(output = rez)
 }
 
 #' @rdname poLCA.residual.pattern
 #' @export
 poLCA.tech10 <- poLCA.residual.pattern
+
+#' @export
+print.tech10 <- function(x, digit = 2, top = 20, ...){
+  pr <- x$output
+  pr[2:7] <- round(pr[2:7], digit)
+  cat("The 20 most frequent patterns\n\n")
+  print(pr[1:top,])
+  cat("\nNumber of observed patterns: ", x$npattern-x$missing.cell)
+  cat("\nNumber of empty cells: ", x$missing.cell)
+  cat("\nTotal number of possible patterns: ", x$npattern)
+}
