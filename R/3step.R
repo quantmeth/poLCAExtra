@@ -39,19 +39,12 @@ d3step <- function(formula, x, nclass = NULL, nreps = 1000, alpha = .05, ...){
     nclass <- nc <- length(x$P)
   }
   
-  
-  
-  #if(is.null(nclass) && inherits(x, "poLCA2")) stop("Specify nclass to proceed.")
-  
   if(!inherits((formula), "formula")) {
     formula <- as.formula(paste0(formula,"~ classes"))
+  } else {
+    formula <- update(formula, . ~ . + classes)
   }
   
-  
-  
-  # if(!any(all.vars(formula) == "classes")) {
-  #   formula <- as.formula(paste0(formula,"+ classes"))
-  # }
   
   D <- x$data
   probs <- predict(x, nclass)[,1:nclass]
@@ -199,4 +192,22 @@ d3step <- function(formula, x, nclass = NULL, nreps = 1000, alpha = .05, ...){
 #' @rdname d3step
 #' @export
 r3step <- d3step
+
+#' @export
+print.r3step <- function(x, digit = 3, ...){
+cat("The statistics\n")
+print(round(x$stat,3))  
+cat("\n\n")
+cat("The median and its confidence intervals.\n")
+print(round(x$M,3))
+}
+
+#' @export
+print.d3step <- function(x, digit = 3, ...){
+  cat("The statistics\n")
+  print(round(x$stat, 3))  
+  cat("\n\n")
+  cat("The median and its confidence intervals.\n")
+  print(round(x$M, 3))
+}
 

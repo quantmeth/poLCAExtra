@@ -8,7 +8,7 @@ Authors@R:
              role = c("aut","cre","cph"),
              email = "pocaron19@gmail.com",
              comment = c(ORCID = "0000-0001-6346-5583")))
-Description: New useful features for poLCA and convenience function to increase workflow.
+Description: New useful features for poLCA and convenient functions to increase workflow.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -18,5 +18,7 @@ Imports:
   nnet (>= 7.3-18),
   MASS (>= 7.3),
   ggplot2 (>= 3.5),
-  psych (>= 2.4.6.26)
+  dplyr (>= 1.1.2),
+  tidyr (>= 1.3.0)
+  
   

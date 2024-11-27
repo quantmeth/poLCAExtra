@@ -56,7 +56,7 @@ print.tech10 <- function(x, digit = 2, top = 20, ...){
   pr <- x$output
   pr[2:7] <- round(pr[2:7], digit)
   cat("The 20 most frequent patterns\n\n")
-  print(pr[1:top,])
+  print(pr[1:top,], row.names = FALSE)
   cat("\nNumber of observed patterns: ", x$npattern-x$missing.cell)
   cat("\nNumber of empty cells: ", x$missing.cell)
   cat("\nTotal number of possible patterns: ", x$npattern)

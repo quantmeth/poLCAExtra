@@ -4,12 +4,14 @@
 \alias{poLCA.residual.cov}
 \title{Inspect residual covariances of each class.}
 \usage{
-poLCA.residual.cov(x, nclass = NULL)
+poLCA.residual.cov(x, nclass = NULL, nreps = 1000)
 }
 \arguments{
 \item{x}{Object of class inheriting from "poLCA" or "poLCA2".}
 
 \item{nclass}{If \code{object} contains many "poLCA" object (i.e., if it a "poLCA2" object), choose the model with the given number of classes.}
+
+\item{nreps}{The number of replications for the bootstrap. Default is 1000.}
 }
 \value{
 A list of residual covariance matices.

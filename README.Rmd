@@ -54,10 +54,25 @@ LCAE
 
 Both previous table can be easily exported.
 
-The original `plot()` (for `poLCA`) function has been updated to account for the multiple LCA.
+The original `plot()` (from `poLCA`) function has been updated to account for the multiple LCA.
 
 ```{r plotLCA}
 plot(LCAE, nclass = 3)
+```
+
+There is also a new plot that works with a single LCA output.
+
+```{r}
+plot.classes(LCA3)
+```
+
+Or all the LCA output, which may help to compare diffent number of classes.
+
+```{r}
+plot.classes(LCAE)
+# If only a subset is required
+# plot.classes(LCAE, nclass = 2:3)
+# plot.classes(LCA2, LCA3)
 ```
 
 # New features
@@ -95,30 +110,31 @@ head(round(predict(LCA3), 3))
 
 ## A function to verify LCA assumptions
 
-Tech10 (in reference to Mplus) to investigate local independence.
+Analysis of residual (also known as Tech10 in Mplus) to investigate local independence.
 
 ```{r tech10}
-poLCA.tech10(LCA3)
-# poLCA.residual.pattern(LCAE, nclass = 3)
+poLCA.residual.pattern(LCAE, nclass = 3)
+# poLCA.tech10(LCA3)
 ```
 
 Residual covariances
 
-```{r rescov}
-# TODO
-# poLCA.residual.cov(LCAE, nclass = 3)
+```{r rescov, cache = TRUE}
+poLCA.residual.cov(LCAE, nclass = 3)
 # poLCA.residual.cov(LCA3)
 ```
 
 ## Bootstrap 3-step approach
 
-```{r 3step}
+```{r 3step, cache = TRUE}
 # Tester des variables supplémentaires
 d3 <- d3step("categorical", LCAE, nclass = 3)
 # d3step("categorical", LCA3)
+d3
 
 r3 <- r3step("continuous", LCAE, nclass = 3)
 # r3step("continuous", LCA3)
+r3
 ```
 The 3-step approches will be improved.
 

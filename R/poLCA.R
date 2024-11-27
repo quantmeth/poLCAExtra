@@ -45,17 +45,14 @@ poLCA <- function(formula, data, nclass = NULL, verbose = FALSE, ...){
                   data = data, #data
                   # maxiter = maxiter, #maxiter #### TODO #### 
                   formula = formula, # formula
-                  verbose = verbose, #) #... ####
+                  verbose = verbose,
+                  simplify = FALSE,#) #... ####
                   ...)  
-
-    class(mod) <- "poLCA2"
     
-    rez <- list(output = summary(mod), 
-                data = data,
-                LCA = mod)
+    #class(mod) <- "poLCA2" # or poLCA2 ???
     
-    class(rez) <- "poLCA2"
-    
+    rez <-  anova.poLCA(mod)
+    rez$data <- data
   } else {
     
     rez <- poLCA::poLCA(formula = formula, 
@@ -66,13 +63,12 @@ poLCA <- function(formula, data, nclass = NULL, verbose = FALSE, ...){
     rez$sabic <- -2*(rez$llik) + rez$npar * log((rez$Nobs+2)/24)
     rez$caic <- -2*(rez$llik) + rez$npar * log(rez$Nobs+1)
     rez$aic3 <- -2*(rez$llik) + 3 * rez$npar
-    rez$data <- data
     
+    if(length(maxcl) == 1){ # TO CHECK
+      rez$data <- data
+    }
   }
   
-  # rez <- list(output = rez, 
-  #             data = data,
-  #             LCA = mod)
   return(rez)
 }
 
