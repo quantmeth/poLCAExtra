@@ -12,7 +12,7 @@ set.seed(42)
 
 # poLCAExtra : New and convenient functions to improve workflow of `poLCA`
 
-The library `poLCAExtra` offers convenient functions to improve the workflow of [`poLCA`](https://github.com/dlinzer/poLCA)[@poLCA]
+The package `poLCAExtra` offers convenient functions to improve the workflow of [`poLCA`](https://github.com/dlinzer/poLCA)[@poLCA]
 
 ```{r github, echo = TRUE, eval = FALSE}
 # Current development version
@@ -21,7 +21,7 @@ remotes::install_github(repo = "quantmeth/poLCAExtra")
 
 # Comparing many latent class models
 
-Either by using many latent
+Either by using many latent class models like
 
 ```{r LCA, warning = FALSE, comment = FALSE, message = FALSE, results = FALSE}
 # poLCAExtra has two data sets examples
@@ -37,13 +37,13 @@ LCA3 <- poLCA(f1, data = jd, nclass = 3, verbose = FALSE)
 LCA4 <- poLCA(f1, data = jd, nclass = 4, maxiter = 1000, nrep = 10, verbose = FALSE)
 ```
 
-They can be compared with.
+which can then be compared with
 
 ```{r CompareLCA}
 anova(LCA1, LCA2, LCA3, LCA4)
 ```
 
-The function readily gathers all relevant statitics to choose the number of classes.
+The function readily gathers some relevant statitics to choose the number of classes.
 
 This new version of `poLCA` can also handle many number of classes and yield the same output.
 
@@ -52,7 +52,7 @@ LCAE <- poLCA(f1, data = jd, nclass = 1:4)
 LCAE
 ```
 
-Both previous table can be easily exported.
+Both previous tables can be easily exported.
 
 The original `plot()` (from `poLCA`) function has been updated to account for the multiple LCA.
 
@@ -87,17 +87,27 @@ LCA3$caic
 LCA3$aic3
 ```
 
-The Lo-Mendell-Rubin statistic has been added.
-
-```{r lmr}
-poLCA.lmr(LCA3)
-```
-
 The relative entropy, which is more often requested than the entropy, has been added.
 
 ```{r re}
 poLCA.relentropy(LCA3)
 ```
+## Two functions to carry likelihood ratio tests
+
+The Lo-Mendell-Rubin adjusted likelihood ratio test and the Vuong-Lo-Mendell-Rubin  likelihood ratio test have been added.
+
+```{r}
+poLCA.lrt(LCA3)
+```
+
+Their equivalent bootstrapped likelihood ratio tests which are more generally recommended are also added. Note that the bootstrapped tests are quite slow.
+
+```{r}
+poLCA.blrt(LCAE)
+# poLCA.blrt(LCA3)
+```
+
+
 
 ## A `predict()` function
 
@@ -108,7 +118,7 @@ head(round(predict(LCA3), 3))
 # head(round(predict(LCAE, nclass = 3),3))
 ```
 
-## A function to verify LCA assumptions
+## Two functions to verify LCA assumptions
 
 Analysis of residual (also known as Tech10 in Mplus) to investigate local independence.
 
@@ -117,17 +127,20 @@ poLCA.residual.pattern(LCAE, nclass = 3)
 # poLCA.tech10(LCA3)
 ```
 
-Residual covariances
+Another one to inspect the covariance matrice.
 
 ```{r rescov, cache = TRUE}
-poLCA.residual.cov(LCAE, nclass = 3)
+poLCA.cov(LCAE, nclass = 3)
 # poLCA.residual.cov(LCA3)
 ```
 
 ## Bootstrap 3-step approach
 
+The 3-step approaches will be improved.
+
+Here are two examples that can be readily be implemented.
+
 ```{r 3step, cache = TRUE}
-# Tester des variables supplémentaires
 d3 <- d3step("categorical", LCAE, nclass = 3)
 # d3step("categorical", LCA3)
 d3
@@ -136,21 +149,17 @@ r3 <- r3step("continuous", LCAE, nclass = 3)
 # r3step("continuous", LCA3)
 r3
 ```
-The 3-step approches will be improved.
 
 d3step plot
 
 ```{r d3stepplot}
 plot(d3, ci = c(.05,.95))
 ```
-
 r3step plot
 
 ```{r r3stepplot}
 plot(r3, ci = c(.05, .95))
 ```
-
-
 
 # How to cite
 

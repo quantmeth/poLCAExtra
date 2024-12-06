@@ -1,29 +1,75 @@
-#' Summary method for "poLCA2" objects
+#' Summary results of object "poLCA2"
 #'
-#' @param object An object of class "poLCA2".
-#' @param ... Further arguments for other methods, ignored for "poLCA2".
+#' @param object an object of class "poLCA2".
+#' @param alpha type I error rate. Default is .05.
+#' @param ... additional arguments affecting the summary produced.
 #'
-#' @note Should not be called directly
+#' @return A data.frame containing the number of classes identified by different fit statistics.
+#' @export
 #'
-#' @return Return a table with relevant. 
-#'
-# summary.poLCA2 <- function(object, ...){
-#   output <- data.frame(nclass = sapply(object, function(x) length(x$P)),
-#                     df = sapply(object, function(x) x$resid.df),
-#                     llike = sapply(object, function(x) x$llik),
-#                     AIC = sapply(object, function(x) x$aic),
-#                     BIC = sapply(object, function(x) x$bic),
-#                    # SABIC = sapply(object, function(x) x$sabic),
-#                     `Classes size` = sapply(object, function(x) paste0(sort(table(x$predclass)), collapse = "|")),
-#                     Entropy = sapply(object, poLCA.entropy), #entropie
-#                     `Relative Entropy` = sapply(object, poLCA.relentropy),
-#                     LMR = sapply(object, poLCA.clmr, y = object, stat = "lmr"),
-#                     p = sapply(object, poLCA.clmr, y = object, stat = "lmr.p"))
-#   return(output)
-# }
-# 
+#' @examples
+#' f1 <- cbind(V1, V2, V3, V4, V5, V6, V7) ~ 1
+#' out <- poLCA(f1, nclass = 1:4, data = ex2.poLCA)
+#' summary(out)
+summary.poLCA2 <- function(object, alpha = .05, ...){
+  tech <- c("aic","bic","sabic","aic3","caic","Chisq","Gsq","poc","lmr","vlmr","blmr","bvlmr")
+  dec <- c(test.csq(object, stat = "aic",   alpha),
+           test.csq(object, stat = "bic",   alpha),
+           test.csq(object, stat = "sabic", alpha),
+           test.csq(object, stat = "aic3",  alpha),
+           test.csq(object, stat = "caic",  alpha),
+           test.csq(object, stat = "Chisq", alpha),
+           test.csq(object, stat = "Gsq",   alpha),
+           test.poc(object, alpha),
+           test.lrt(object, alpha),
+           test.blrt(object,alpha))
+  rez <- data.frame(tech = tech, dec = dec)
+  rez[rez == -999] <- NA
+  rez
+}
 
 
 
-#LCA3$N
-#LCA
+test.csq <- function(x, stat, alpha = .05){
+  chi2 <- sapply(x$LCA, function(x) x[[stat]])
+  df <- sapply(x$LCA, function(x) x$npar)
+  dec <- which(pchisq(chi2[-length(chi2)]-chi2[-1],df[-1]-df[-length(chi2)], lower.tail = FALSE) > alpha)
+  if(length(dec) == 0){
+    -999  
+  }else{
+    min(dec)
+  }
+}
+
+test.poc <- function(object, alpha){
+  dec <- which(sapply(sapply(object$LCA, poLCA.cov)[1,], function(x) x)[3,] > alpha)
+  if(length(dec) == 0){
+    -999  
+  }else{
+    min(dec)
+  }
+}
+
+test.blrt <- function(x, alpha){
+  out <- poLCA.blrt(x)$output[c("lmr.p","vlmr.p")]
+  apply(out,2, function(x) {
+    dec <- which(x > alpha)
+    if(length(dec) == 0){
+      -999  
+    }else{
+      min(dec)
+    }
+  })
+}
+
+test.lrt <- function(x, alpha){
+  out <- sapply(x$LCA, .poLCA.clrt, y = x$LCA, stat =c("lmr.p","vlmr.p"))
+  apply(out,1, function(x) {
+    dec <- which(x > alpha)
+    if(length(dec) == 0){
+      -999  
+    }else{
+      min(dec)
+    }
+  })
+}

@@ -1,8 +1,8 @@
 #' Compare the statistics of an poLCA2 object
 #'
-#' @param x An poLCA2 object.
-#' @param stat The desired statistics to compare. Default is "AIC". It can be also "BIC", "saBIC", "CAIC" or "AIC3".
-#' @param alpha The significance threshold. 
+#' @param x an poLCA2 object.
+#' @param stat the desired statistics to compare. Default is "AIC". It can be also "BIC", "saBIC", "CAIC" or "AIC3".
+#' @param alpha the significance threshold. 
 #'
 #' @return A data frame with 
 #' \itemize{

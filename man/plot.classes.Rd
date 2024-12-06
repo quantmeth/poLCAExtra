@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{An object of class "poLCA" or "poLCA2".}
 
-\item{...}{Further Objects of class "poLCA".}
+\item{...}{Further objects of class "poLCA".}
 
 \item{nclass}{If the object is of class "poLCA2" and only a single model have to be plotted.}
 

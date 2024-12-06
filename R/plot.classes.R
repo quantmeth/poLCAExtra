@@ -3,7 +3,7 @@
 #' @param x An object of class "poLCA" or "poLCA2".
 #' @param nclass If the object is of class "poLCA2" and only a single model have to be plotted.
 #' @param alpha The type I error rate for confidence intervals.
-#' @param ...  Further Objects of class "poLCA".
+#' @param ...  Further objects of class "poLCA".
 #'
 #' @return A ggplot2 output.
 #' 

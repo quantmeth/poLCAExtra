@@ -1,8 +1,8 @@
 #' Compute relative entropy of an "poLCA" object
 #'
-#' @param model An object of class "poLCA"
+#' @param model An object of class "poLCA".
 #'
-#' @return A vector containing the relative entropu.
+#' @return A vector containing the relative entropy.
 #' @export
 #'
 #' @examples

@@ -10,11 +10,11 @@ poLCA.residual.pattern(x, nclass = NULL, alpha = 0.05)
 poLCA.tech10(x, nclass = NULL, alpha = 0.05)
 }
 \arguments{
-\item{x}{An object of class "poLCA" or "poLCA2"}
+\item{x}{an object of class "poLCA" or "poLCA2"}
 
-\item{nclass}{If \code{object} contains many "poLCA" object (i.e., if it a "poLCA2" object), choose the model with the given number of classes.}
+\item{nclass}{if \code{object} contains many "poLCA" object (i.e., if it a "poLCA2" object), choose the model with the given number of classes.}
 
-\item{alpha}{A type I error threshold to mark the check column.}
+\item{alpha}{a type I error threshold to mark the check column.}
 }
 \value{
 A data frame containing the patterns' residuals.

@@ -7,11 +7,11 @@
 poLCA.compare(x, stat = "AIC", alpha = 0.05)
 }
 \arguments{
-\item{x}{An poLCA2 object.}
+\item{x}{an poLCA2 object.}
 
-\item{stat}{The desired statistics to compare. Default is "AIC". It can be also "BIC", "saBIC", "CAIC" or "AIC3".}
+\item{stat}{the desired statistics to compare. Default is "AIC". It can be also "BIC", "saBIC", "CAIC" or "AIC3".}
 
-\item{alpha}{The significance threshold.}
+\item{alpha}{the significance threshold.}
 }
 \value{
 A data frame with 

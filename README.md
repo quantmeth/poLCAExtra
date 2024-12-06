@@ -1,7 +1,7 @@
 
 # poLCAExtra : New and convenient functions to improve workflow of `poLCA`
 
-The library `poLCAExtra` offers convenient functions to improve the
+The package `poLCAExtra` offers convenient functions to improve the
 workflow of [`poLCA`](https://github.com/dlinzer/poLCA)(Linzer & Lewis,
 2011)
 
@@ -12,7 +12,7 @@ remotes::install_github(repo = "quantmeth/poLCAExtra")
 
 # Comparing many latent class models
 
-Either by using many latent
+Either by using many latent class models like
 
 ``` r
 # poLCAExtra has two data sets examples
@@ -28,25 +28,20 @@ LCA3 <- poLCA(f1, data = jd, nclass = 3, verbose = FALSE)
 LCA4 <- poLCA(f1, data = jd, nclass = 4, maxiter = 1000, nrep = 10, verbose = FALSE)
 ```
 
-They can be compared with.
+which can then be compared with
 
 ``` r
 anova(LCA1, LCA2, LCA3, LCA4)
 ```
 
-    ##  nclass df     llike      AIC      BIC  Classes.size Entropy Rel.Entropy
-    ##       1 57 -2687.896 5387.793 5415.900           800   3.360            
-    ##       2 50 -2463.806 4953.612 5014.512        98|702   3.082       0.897
-    ##       3 43 -2195.821 4431.642 4525.334   101|345|354   2.746       0.840
-    ##       4 36 -2190.270 4434.540 4561.025 49|73|324|354   2.736       0.871
-    ##      LMR      p
-    ##                
-    ##  426.893 < .001
-    ##  510.513 < .001
-    ##   10.574  0.158
+    ##  nclass df     llike      AIC      BIC Rel.Entropy     LMR      p  Classes.size
+    ##       1 57 -2687.896 5387.793 5415.900                                      800
+    ##       2 50 -2463.806 4953.612 5014.512       0.897 426.893 < .001        98|702
+    ##       3 43 -2195.821 4431.642 4525.334       0.840 510.513 < .001   101|345|354
+    ##       4 36 -2190.270 4434.540 4561.025       0.871  10.574  0.158 49|73|324|354
 
-The function readily gathers all relevant statitics to choose the number
-of classes.
+The function readily gathers some relevant statitics to choose the
+number of classes.
 
 This new version of `poLCA` can also handle many number of classes and
 yield the same output.
@@ -56,7 +51,7 @@ LCAE <- poLCA(f1, data = jd, nclass = 1:4)
 LCAE
 ```
 
-Both previous table can be easily exported.
+Both previous tables can be easily exported.
 
 The original `plot()` (from `poLCA`) function has been updated to
 account for the multiple LCA.
@@ -114,10 +109,22 @@ LCA3$aic3
 
     ## [1] 4451.642
 
-The Lo-Mendell-Rubin statistic has been added.
+The relative entropy, which is more often requested than the entropy,
+has been added.
 
 ``` r
-poLCA.lmr(LCA3)
+poLCA.relentropy(LCA3)
+```
+
+    ## [1] 0.8396916
+
+## Two functions to carry likelihood ratio tests
+
+The Lo-Mendell-Rubin adjusted likelihood ratio test and the
+Vuong-Lo-Mendell-Rubin likelihood ratio test have been added.
+
+``` r
+poLCA.lrt(LCA3)
 ```
 
     ## $vlmr
@@ -131,15 +138,29 @@ poLCA.lmr(LCA3)
     ## 
     ## $lmr.p
     ## [1] 8.005233e-66
+    ## 
+    ## $vlmr.p
+    ## [1] 2.885461e-69
 
-The relative entropy, which is more often requested than the entropy,
-has been added.
+Their equivalent bootstrapped likelihood ratio tests which are more
+generally recommended are also added. Note that the bootstrapped tests
+are quite slow.
 
 ``` r
-poLCA.relentropy(LCA3)
+poLCA.blrt(LCAE)
 ```
 
-    ## [1] 0.8396916
+    ## Bootstrapped likelihood ratio tests 
+    ## 
+    ##  nclass npar      llik    vlmr     lmr df vlmr.p  lmr.p
+    ##       1    6 -2687.285                                 
+    ##       2   13 -2372.241 630.089 663.158  7 < .001 < .001
+    ##       3   20 -2188.950 366.582 385.822  7 < .001 < .001
+    ##       4   27 -2174.509  28.880  30.396  7 < .001 < .001
+
+``` r
+# poLCA.blrt(LCA3)
+```
 
 ## A `predict()` function
 
@@ -161,7 +182,7 @@ head(round(predict(LCA3), 3))
 # head(round(predict(LCAE, nclass = 3),3))
 ```
 
-## A function to verify LCA assumptions
+## Two functions to verify LCA assumptions
 
 Analysis of residual (also known as Tech10 in Mplus) to investigate
 local independence.
@@ -202,28 +223,35 @@ poLCA.residual.pattern(LCAE, nclass = 3)
 # poLCA.tech10(LCA3)
 ```
 
-Residual covariances
+Another one to inspect the covariance matrice.
 
 ``` r
-poLCA.residual.cov(LCAE, nclass = 3)
+poLCA.cov(LCAE, nclass = 3)
 ```
 
-    ##      pair chi2     p
-    ##  V4 ~~ V1 1.66 0.198
-    ##  V6 ~~ V4 1.56 0.212
-    ##  V6 ~~ V1 1.52 0.218
-    ##  V2 ~~ V1 1.34 0.247
-    ##  V5 ~~ V1 1.25 0.264
-    ##  V4 ~~ V2 1.15 0.284
-    ##  V6 ~~ V2 1.14 0.286
-    ##  V6 ~~ V3 1.08 0.299
-    ##  V4 ~~ V3 1.03 0.310
-    ##  V5 ~~ V4 0.96 0.327
-    ##  V6 ~~ V5 0.92 0.337
-    ##  V3 ~~ V1 0.88 0.348
-    ##  V5 ~~ V3 0.77 0.380
-    ##  V5 ~~ V2 0.73 0.393
-    ##  V3 ~~ V2 0.71 0.399
+    ## Relevant statistics : 
+    ## Chisq :     1.807 
+    ## df    :     15 
+    ## p     :     1.000 
+    ## 
+    ## Top 15  covariances : 
+    ## 
+    ##      pair Observed Expected  chi2     p
+    ##  V5 ~~ V1    0.026    0.030 0.558 0.455
+    ##  V2 ~~ V1    0.032    0.029 0.449 0.503
+    ##  V6 ~~ V4    0.064    0.062 0.230 0.631
+    ##  V6 ~~ V2    0.021    0.023 0.160 0.690
+    ##  V6 ~~ V3    0.022    0.020 0.101 0.751
+    ##  V5 ~~ V3    0.130    0.128 0.097 0.755
+    ##  V4 ~~ V2    0.013    0.015 0.088 0.767
+    ##  V4 ~~ V3    0.013    0.012 0.032 0.857
+    ##  V5 ~~ V4    0.015    0.017 0.032 0.858
+    ##  V3 ~~ V1    0.026    0.025 0.017 0.895
+    ##  V4 ~~ V1    0.054    0.055 0.016 0.898
+    ##  V3 ~~ V2    0.131    0.130 0.013 0.908
+    ##  V6 ~~ V1    0.058    0.058 0.010 0.921
+    ##  V5 ~~ V2    0.137    0.137 0.003 0.957
+    ##  V6 ~~ V5    0.025    0.025 0.000 0.988
 
 ``` r
 # poLCA.residual.cov(LCA3)
@@ -231,30 +259,35 @@ poLCA.residual.cov(LCAE, nclass = 3)
 
 ## Bootstrap 3-step approach
 
+The 3-step approaches will be improved.
+
+Here are two examples that can be readily be implemented.
+
 ``` r
-# Tester des variables supplémentaires
 d3 <- d3step("categorical", LCAE, nclass = 3)
 # d3step("categorical", LCA3)
 d3
 ```
 
-    ## The statistics     LR     AIC      df       p 
-    ##  16.698 -12.698   2.000   0.001 
+    ## The statistics
+    ##      LR     AIC      df       p 
+    ##  16.380 -12.380   2.000   0.001 
     ## 
     ## 
-    ## The median and its confidence intervals., , Pr(categorical==0)
+    ## The median and its confidence intervals.
+    ## , , Pr(categorical==0)
     ## 
     ##               2.5%   50% 97.5%
-    ## Pr(Class==1) 0.291 0.306 0.321
-    ## Pr(Class==2) 0.431 0.448 0.465
-    ## Pr(Class==3) 0.287 0.318 0.346
+    ## Pr(Class==1) 0.292 0.307 0.322
+    ## Pr(Class==2) 0.431 0.447 0.464
+    ## Pr(Class==3) 0.290 0.318 0.349
     ## 
     ## , , Pr(categorical==1)
     ## 
     ##               2.5%   50% 97.5%
-    ## Pr(Class==1) 0.679 0.694 0.709
-    ## Pr(Class==2) 0.535 0.552 0.569
-    ## Pr(Class==3) 0.654 0.682 0.713
+    ## Pr(Class==1) 0.678 0.693 0.708
+    ## Pr(Class==2) 0.536 0.553 0.569
+    ## Pr(Class==3) 0.651 0.682 0.710
 
 ``` r
 r3 <- r3step("continuous", LCAE, nclass = 3)
@@ -262,16 +295,16 @@ r3 <- r3step("continuous", LCAE, nclass = 3)
 r3
 ```
 
-    ## The statistics     LR     AIC      df      R2       p 
-    ##  11.573 -19.145   2.000   0.029   0.000 
+    ## The statistics
+    ##      LR     AIC      df      R2       p 
+    ##  11.458 -18.917   2.000   0.028   0.000 
     ## 
     ## 
-    ## The median and its confidence intervals.               2.5%    50%  97.5%
-    ## Pr(Class==1) 21.485 21.715 21.952
-    ## Pr(Class==2) 23.773 24.020 24.275
-    ## Pr(Class==3) 20.771 21.204 21.637
-
-The 3-step approches will be improved.
+    ## The median and its confidence intervals.
+    ##                2.5%    50%  97.5%
+    ## Pr(Class==1) 21.483 21.723 21.942
+    ## Pr(Class==2) 23.758 24.012 24.266
+    ## Pr(Class==3) 20.798 21.205 21.639
 
 d3step plot
 
@@ -279,9 +312,7 @@ d3step plot
 plot(d3, ci = c(.05,.95))
 ```
 
-![](README_files/figure-gfm/d3stepplot-1.png)<!-- -->
-
-r3step plot
+![](README_files/figure-gfm/d3stepplot-1.png)<!-- --> r3step plot
 
 ``` r
 plot(r3, ci = c(.05, .95))

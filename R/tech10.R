@@ -1,8 +1,8 @@
 #' Inspect patterns' residuals of latent class analysis.
 #'
-#' @param x An object of class "poLCA" or "poLCA2"
-#' @param nclass  If \code{object} contains many "poLCA" object (i.e., if it a "poLCA2" object), choose the model with the given number of classes.
-#' @param alpha A type I error threshold to mark the check column.
+#' @param x an object of class "poLCA" or "poLCA2"
+#' @param nclass  if \code{object} contains many "poLCA" object (i.e., if it a "poLCA2" object), choose the model with the given number of classes.
+#' @param alpha a type I error threshold to mark the check column.
 #'
 #' @return A data frame containing the patterns' residuals.
 #' @export

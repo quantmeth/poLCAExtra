@@ -4,7 +4,7 @@
 #'
 #' @param object Object of class inheriting from "poLCA" or "poLCA2".
 #' @param nclass If \code{object} contains many "poLCA" object (i.e., if it a "poLCA2" object), choose the model with the given number of classes.
-#' @param ...	 additional arguments affecting the predictions produced.
+#' @param ...	 Additional arguments affecting the predictions produced.
 #'
 #' @return A data frame with the probabilities of each subject to be in each classes and the predicted classes.
 #' @export

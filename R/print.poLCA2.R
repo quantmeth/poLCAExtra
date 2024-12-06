@@ -14,7 +14,7 @@ print.poLCA2 <- function(x, digit = 3, ...) {
   #conjuger et mettre le point
   #cat("\n The recommended number of classes is ", x$output["nclass"][min(which(x$output["p"] < .05)), 1],"\n\n")
   tab <- x$output
-  tab[,-6] <- round(tab[,-6], digit)
+  tab[,-ncol(tab)] <- round(tab[,-ncol(tab)], digit)
   tab$p <-  ifelse(tab$p == 0,"< .001", sprintf(paste0("%.", digit,"f"), tab$p))
   tab$Rel.Entropy <-  sprintf(paste0("%.", digit,"f"), tab$Rel.Entropy)
   tab$LMR <-  sprintf(paste0("%.", digit,"f"), tab$LMR)

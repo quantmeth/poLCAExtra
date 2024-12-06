@@ -11,7 +11,7 @@
 
 \item{nclass}{If \code{object} contains many "poLCA" object (i.e., if it a "poLCA2" object), choose the model with the given number of classes.}
 
-\item{...}{additional arguments affecting the predictions produced.}
+\item{...}{Additional arguments affecting the predictions produced.}
 }
 \value{
 A data frame with the probabilities of each subject to be in each classes and the predicted classes.

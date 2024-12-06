@@ -7,10 +7,10 @@
 poLCA.relentropy(model)
 }
 \arguments{
-\item{model}{An object of class "poLCA"}
+\item{model}{An object of class "poLCA".}
 }
 \value{
-A vector containing the relative entropu.
+A vector containing the relative entropy.
 }
 \description{
 Compute relative entropy of an "poLCA" object
