@@ -59,12 +59,12 @@ poLCA.cov <- function(x, nclass = NULL, ...){
   stat <- list(chi2 = chi2,
                stat = stat,
                SigmaHat = ES)
-  class(stat) <- c("poLCA.rescov")
+  class(stat) <- c("poLCA.cov")
   stat
 }
 
 #' @export
-print.poLCA.rescov <- function(x, digit = 3, top = min(20, nrow(x$stat)), ...){
+print.poLCA.cov <- function(x, digit = 3, top = min(20, nrow(x$stat)), ...){
   s <- x$chi2
   x <- x$stat[1:top,]
   x[,-1] <- round(x[,-1], digit)

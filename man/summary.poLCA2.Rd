@@ -4,12 +4,14 @@
 \alias{summary.poLCA2}
 \title{Summary results of object "poLCA2"}
 \usage{
-\method{summary}{poLCA2}(object, alpha = 0.05, ...)
+\method{summary}{poLCA2}(object, alpha = 0.05, crit.rmsea = 0.08, ...)
 }
 \arguments{
 \item{object}{an object of class "poLCA2".}
 
 \item{alpha}{type I error rate. Default is .05.}
+
+\item{crit.rmsea}{A criterion for RMSEA. Default is .08.}
 
 \item{...}{additional arguments affecting the summary produced.}
 }
@@ -20,7 +22,7 @@ A data.frame containing the number of classes identified by different fit statis
 Summary results of object "poLCA2"
 }
 \examples{
-f1 <- cbind(V1, V2, V3, V4, V5, V6, V7) ~ 1
-out <- poLCA(f1, nclass = 1:4, data = ex2.poLCA)
-summary(out)
+f2 <- cbind(V1, V2, V3, V4, V5, V6, V7) ~ 1
+LCAE <- poLCA(f2, nclass = 1:4, data = ex2.poLCA)
+summary(LCAE)
 }

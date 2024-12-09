@@ -131,7 +131,7 @@ Another one to inspect the covariance matrice.
 
 ```{r rescov, cache = TRUE}
 poLCA.cov(LCAE, nclass = 3)
-# poLCA.residual.cov(LCA3)
+# poLCA.cov(LCA3)
 ```
 
 ## Bootstrap 3-step approach

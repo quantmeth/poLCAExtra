@@ -2,17 +2,18 @@
 #'
 #' @param object an object of class "poLCA2".
 #' @param alpha type I error rate. Default is .05.
+#' @param crit.rmsea A criterion for RMSEA. Default is .08.
 #' @param ... additional arguments affecting the summary produced.
 #'
 #' @return A data.frame containing the number of classes identified by different fit statistics.
 #' @export
 #'
 #' @examples
-#' f1 <- cbind(V1, V2, V3, V4, V5, V6, V7) ~ 1
-#' out <- poLCA(f1, nclass = 1:4, data = ex2.poLCA)
-#' summary(out)
-summary.poLCA2 <- function(object, alpha = .05, ...){
-  tech <- c("aic","bic","sabic","aic3","caic","Chisq","Gsq","poc","lmr","vlmr","blmr","bvlmr")
+#' f2 <- cbind(V1, V2, V3, V4, V5, V6, V7) ~ 1
+#' LCAE <- poLCA(f2, nclass = 1:4, data = ex2.poLCA)
+#' summary(LCAE)
+summary.poLCA2 <- function(object, alpha = .05, crit.rmsea = .08, ...){
+  tech <- c("aic","bic","sabic","aic3","caic","chisq","gsq","poc","lmr","vlmr","blmr","bvlmr", "rmsea")
   dec <- c(test.csq(object, stat = "aic",   alpha),
            test.csq(object, stat = "bic",   alpha),
            test.csq(object, stat = "sabic", alpha),
@@ -22,7 +23,8 @@ summary.poLCA2 <- function(object, alpha = .05, ...){
            test.csq(object, stat = "Gsq",   alpha),
            test.poc(object, alpha),
            test.lrt(object, alpha),
-           test.blrt(object,alpha))
+           test.blrt(object,alpha),
+           test.rmsea(object, crit.rmsea))
   rez <- data.frame(tech = tech, dec = dec)
   rez[rez == -999] <- NA
   rez
@@ -41,8 +43,27 @@ test.csq <- function(x, stat, alpha = .05){
   }
 }
 
+test.csq2 <- function(x, stat, alpha = .05){
+  chi2 <- sapply(x$LCA, function(x) x[[stat]])
+  df <- sapply(x$LCA, function(x) x$npar)
+  dec <- which(pchisq(chi2,df, lower.tail = FALSE) > alpha)
+  if(length(dec) == 0){
+    -999  
+  }else{
+    min(dec)
+  }
+}
 test.poc <- function(object, alpha){
   dec <- which(sapply(sapply(object$LCA, poLCA.cov)[1,], function(x) x)[3,] > alpha)
+  if(length(dec) == 0){
+    -999  
+  }else{
+    min(dec)
+  }
+}
+
+test.rmsea <- function(object, alpha){
+  dec <- which(sapply(sapply(object$LCA, poLCA.cov)[1,], function(x) x)[4,] < .08)
   if(length(dec) == 0){
     -999  
   }else{
