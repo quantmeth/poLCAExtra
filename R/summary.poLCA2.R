@@ -63,7 +63,7 @@ test.poc <- function(object, alpha){
 }
 
 test.rmsea <- function(object, alpha){
-  dec <- which(sapply(sapply(object$LCA, poLCA.cov)[1,], function(x) x)[4,] < .08)
+  dec <- which(poLCA.rmsea(object) < .08)
   if(length(dec) == 0){
     -999  
   }else{
