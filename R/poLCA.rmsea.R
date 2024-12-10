@@ -10,7 +10,7 @@
 #' LCAE <- poLCA(f2, nclass = 1:4, data = ex2.poLCA)
 #' poLCA.rmsea(LCAE)
 poLCA.rmsea <- function(object){
-  if(inherits(x, "poLCA")){
+  if(inherits(object, "poLCA")){
     #object <- list(LCA = object)
     poLCA.cov(object)$chi2[[4]]
   } 
