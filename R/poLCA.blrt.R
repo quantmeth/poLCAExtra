@@ -1,24 +1,25 @@
-#' Bootstrapped likelihood ratio tests
+#' Bootstrapped Likelihood Ratio Test
 #'
 #' @param object an object of class "poLCA" or "poLCA2".
-#' @param nreps the number of replications for the bootstrap. Default is 50.
+#' @param nreps the number of replications for the bootstrap. Default is 100.
+#' @param quick an option tostop faster with "poLCA2" objects. It will stop at the first \code{p < alpha}.
+#' @param alpha a type I error threshold to stop the blrt test.
 #' @param ... any other argument for \code{poLCA}.
 #'
-#' @return A data frame containing mainly :
-#' \itemize{
-#' \item Average bootstraped Vuong-Lo-Mendell-Rubin adjusted likelihood ratio test;
-#' \item Average bootstraped Lo-Mendell-Rubin adjusted likelihood ratio test;
-#' \item Vuong-Lo-Mendell-Rubin adjusted likelihood ratio test p-value;
-#' \item Lo-Mendell-Rubin adjusted likelihood ratio test p-value.}
+#' @return A data frame containing mainly
 #' 
 #' @details This function can take some time especially with "poLCA2" class objects as they contain many "poLCA" objects. 
+#'
+#' @aliases tech14 poLCA.blrt
 #'
 #' @author 
 #' P.-O. Caron
 #' 
 #' @references
 #' 
-#' Linzer, D. A. & Lewis, J. F. (2011). poLCA: An R Package for Polytomous Variable Latent Class Analysis. \emph{Journal of Statistical Software}, \emph{42}(10), 1-29. \url{https://www.jstatsoft.org/v42/i10/}
+#' Linzer, D. A. & Lewis, J. F. (2011). poLCA: An R Package for polytomous variable latent class analysis. \emph{Journal of Statistical Software}, \emph{42}(10), 1-29. \url{https://www.jstatsoft.org/v42/i10/}
+#' 
+#' McLachlan, G. (2000). \emph{Finite mixture models}. Wiley
 #' 
 #' @importFrom MASS ginv 
 #' @export
@@ -26,81 +27,103 @@
 #' @examples
 #' f1 <- cbind(V1, V2, V3, V4, V5, V6) ~ 1
 #' out <- poLCA(f1, nclass = 3:4, data = ex1.poLCA)
+#' \dontrun{
 #' poLCA.blrt(out)
-poLCA.blrt <- function(object, nreps = 50, ...){
-
+#' }
+poLCA.blrt <- function(object, nreps = 100, quick = TRUE, alpha = .05,  ...){
+  
   jd <- object$data
   N <- nrow(jd)
   
   if(inherits(object,"poLCA2")){
     P <- object$output$nclass
-    object <- object$LCA[[1]]
+    qwe <- object$LCA[[1]]
+    LCA <- object$LCA
   } else if(inherits(object,"poLCA")) {
     P <- length(object$P)
+    qwe <- object
+    LCA <- object
   }
-  
-  x <- colnames(object$x)
-  y <- colnames(object$y)
-  K <- t(matrix(apply(object$y, 2, max)))
-  flrt <- as.formula(paste0("cbind(",paste0(y, collapse = ","),")~",paste0(c(1, x[-1]), collapse = "+")))
-    #data, formula
-  
-  test <- (min(P)>1) || (length(P) == 1)
-  if(test) P <- c(min(P) - 1, P)
-  npar <- P-1 + sum((K - 1)) * P
-  
-  rez <- matrix(NA, ncol = nreps, nrow = length(P))
-  for(i in 1:nreps){
-    idx <- sample(N, replace = TRUE) 
-    D <- jd[idx,]
-    # rez[,i] <- sapply(P, quicker.poLCA, x=x,
-    #                   y=D,S=S,J=J,N=N, K.j = K.j,
-    #                   probs.start = probs.start, maxiter = maxiter, 
-    #                   tol = tol, nrep = nrep)
-    mod <- sapply(as.list(P), 
-                  FUN = poLCA, 
-                  data = D, #data
-                  # maxiter = maxiter, #maxiter #### TODO #### 
-                  formula = flrt, # formula
-                  verbose = FALSE,
-                  simplify = FALSE)#,#) #... ####
-                  #...)  
-    rez[,i] <- sapply(mod, function(x) x$llik)
-    
-  }
-  
-  ret <- data.frame(nclass = P,
-                    npar=npar,
-                    llik = rowMeans(rez))
-  
-  ret$vlmr <- c(NaN, 2 * (ret$llik[-1] - ret$llik[-nrow(ret)]))
-  ret$lmr <- ret$vlmr / c(NA,(1 + (((3 * ret$nclass[-nrow(ret)] - 1) - 
-                                      (3 * ret$nclass[-1] - 1)) * log(N))^-1))
-  ret$df <- c(NaN, ret$npar[-1] - ret$npar[-nrow(ret)])
-  ret$vlmr.p <- pchisq(q = ret$vlmr, df = ret$df, lower.tail = FALSE)
-  ret$lmr.p <- pchisq(q = ret$lmr, df = ret$df, lower.tail = FALSE)
 
+  y <- colnames(qwe$y)
+  K <- t(matrix(apply(qwe$y, 2, max)))
+  test <- (min(P)>1) || (length(P) == 1)
   
-  if(test) ret <- ret[-1,]
-  ret <- list(output = ret)
+  if(test) {
+    P <- c(min(P) - 1, P)
+    x <- colnames(qwe$x)
+    
+    flrt <- as.formula(paste0("cbind(", paste0(y, collapse = ","),")~", paste0(c(1, x[-1]), collapse = "+")))
+    LCA <- c(list(poLCA(flrt,
+                      nclass = P[1],
+                      data = jd,
+                      verbose = FALSE,
+                      calc.se = FALSE)),#,#,
+                      #...),
+                LCA)
+  }
+  
+  npar <- P - 1 + sum((K - 1)) * P
+  rez <- matrix(NA, ncol = nreps, nrow = length(P)-1)
+  
+  f0 <- as.formula(paste0("cbind(",paste0(paste0("Y",1:length(y)), collapse = ","),")~1"))
+  
+  poLCA2.simulate <- function(x){
+    D <- poLCA::poLCA.simdata(N = nrow(x$data),
+                              probs = x$probs,
+                              P = x$P)$dat
+    D2 <- poLCA(f0, 
+                data = D, 
+                nclass = length(x$P):(length(x$P)+1), 
+                verbose = FALSE,
+                calc.se = FALSE)
+    2*diff(sapply(D2$LCA, function(x) x$llik))
+  }
+  
+  lca.idx <- as.matrix(1:(length(LCA)-1))
+  if(quick){
+    lca.idx <- t(lca.idx)
+  }
+  
+  llike1 <- sapply(LCA, function(x) x$llik)
+  llike2 <- 2*-(llike1[-length(llike1)]-llike1[-1])
+  
+  for(k in 1:ncol(lca.idx)){
+    for(i in 1:nreps){
+      rez[lca.idx[,k],i] <- sapply(LCA[lca.idx[,k]], poLCA2.simulate)
+    }
+    #drez <- cbind(llike, rez)
+    p.value <- apply(cbind(llike2, rez), 1, function(x) mean(x[-1] >= x[1]))
+    if(quick && (any(na.omit(p.value) >= alpha))) break
+  }
+  
+  ret <- list(output = na.omit(data.frame(test = paste0(P[-1]," vs ",P[-length(P)]),
+                    H0_llik = llike1[-length(llike1)],
+                    `2loglik_diff` = llike2,
+                    npar = npar[-1]-npar[-length(npar)],
+                    mean = rowMeans(rez),#rowMeans(drez[,-1]),
+                    `s.e.` = apply(rez,1,sd),
+                    p = p.value)))
   class(ret) <- c("poLCAblrt")
   return(ret)
 }
 
+#' @rdname poLCA.blrt 
 #' @export
-print.poLCAblrt <- function(x, digit = 3, ...){
-  cat("Bootstrapped likelihood ratio tests \n")
+poLCA.tech14 <- poLCA.blrt 
+
+#' @export
+print.poLCAblrt <- function(x, digit = 3, alpha = .05, ...){
+  cat("Vuong-Lo-Mendell-Rubin Likelihood Ratio Test \n")
   cat("\n")
   tab <- x$output #as.data.frame(x)
-  tab <- round(tab, digit)
-  tab$vlmr.p <-  ifelse(tab$vlmr.p == 0,"< .001", sprintf(paste0("%.", digit,"f"), tab$vlmr.p))
-  tab$lmr.p <-  ifelse(tab$lmr.p == 0,"< .001", sprintf(paste0("%.", digit,"f"), tab$lmr.p))
-  tab$lmr <-  sprintf(paste0("%.", digit,"f"), tab$lmr)
-  tab$vlmr <-  sprintf(paste0("%.", digit,"f"), tab$vlmr)
-  tab[is.na(tab)] <- "NaN"
-  tab[tab == "NaN"] <- ""
+  tab[-1] <- round(tab[-1], digit)
+  tab$p <-  ifelse(tab$p == 0,"< .001", sprintf(paste0("%.", digit,"f"), tab$p))
   print(tab, row.names = FALSE)
+  cat("\n")
+  cat(paste0("At ", (1-alpha) * 100,"% condidence, blrt recommends ", min(which(tab$p>=alpha))," classes.\n"))
 }
+
 
 # 
 # 

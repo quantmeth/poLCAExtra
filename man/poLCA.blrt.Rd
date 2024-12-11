@@ -2,27 +2,30 @@
 % Please edit documentation in R/poLCA.blrt.R
 \name{poLCA.blrt}
 \alias{poLCA.blrt}
-\title{Bootstrapped likelihood ratio tests}
+\alias{tech14}
+\alias{poLCA.tech14}
+\title{Bootstrapped Likelihood Ratio Test}
 \usage{
-poLCA.blrt(object, nreps = 50, ...)
+poLCA.blrt(object, nreps = 100, quick = TRUE, alpha = 0.05, ...)
+
+poLCA.tech14(object, nreps = 100, quick = TRUE, alpha = 0.05, ...)
 }
 \arguments{
 \item{object}{an object of class "poLCA" or "poLCA2".}
 
-\item{nreps}{the number of replications for the bootstrap. Default is 50.}
+\item{nreps}{the number of replications for the bootstrap. Default is 100.}
+
+\item{quick}{an option tostop faster with "poLCA2" objects. It will stop at the first \code{p < alpha}.}
+
+\item{alpha}{a type I error threshold to stop the blrt test.}
 
 \item{...}{any other argument for \code{poLCA}.}
 }
 \value{
-A data frame containing mainly :
-\itemize{
-\item Average bootstraped Vuong-Lo-Mendell-Rubin adjusted likelihood ratio test;
-\item Average bootstraped Lo-Mendell-Rubin adjusted likelihood ratio test;
-\item Vuong-Lo-Mendell-Rubin adjusted likelihood ratio test p-value;
-\item Lo-Mendell-Rubin adjusted likelihood ratio test p-value.}
+A data frame containing mainly
 }
 \description{
-Bootstrapped likelihood ratio tests
+Bootstrapped Likelihood Ratio Test
 }
 \details{
 This function can take some time especially with "poLCA2" class objects as they contain many "poLCA" objects.
@@ -30,10 +33,14 @@ This function can take some time especially with "poLCA2" class objects as they 
 \examples{
 f1 <- cbind(V1, V2, V3, V4, V5, V6) ~ 1
 out <- poLCA(f1, nclass = 3:4, data = ex1.poLCA)
+\dontrun{
 poLCA.blrt(out)
 }
+}
 \references{
-Linzer, D. A. & Lewis, J. F. (2011). poLCA: An R Package for Polytomous Variable Latent Class Analysis. \emph{Journal of Statistical Software}, \emph{42}(10), 1-29. \url{https://www.jstatsoft.org/v42/i10/}
+Linzer, D. A. & Lewis, J. F. (2011). poLCA: An R Package for polytomous variable latent class analysis. \emph{Journal of Statistical Software}, \emph{42}(10), 1-29. \url{https://www.jstatsoft.org/v42/i10/}
+
+McLachlan, G. (2000). \emph{Finite mixture models}. Wiley
 }
 \author{
 P.-O. Caron

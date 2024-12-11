@@ -92,22 +92,20 @@ The relative entropy, which is more often requested than the entropy, has been a
 ```{r re}
 poLCA.relentropy(LCA3)
 ```
-## Two functions to carry likelihood ratio tests
+The Lo-Mendell-Rubin adjusted likelihood ratio test and the Vuong-Lo-Mendell-Rubin likelihood ratio test have been added.
 
-The Lo-Mendell-Rubin adjusted likelihood ratio test and the Vuong-Lo-Mendell-Rubin  likelihood ratio test have been added.
-
-```{r}
+```{r lrt}
 poLCA.lrt(LCA3)
 ```
 
-Their equivalent bootstrapped likelihood ratio tests which are more generally recommended are also added. Note that the bootstrapped tests are quite slow.
+The bootstrapped Vuong-Lo-Mendell-Rubin likelihood ratio test which is more generally recommended is also added. Note that the bootstrapped tests are quite time-consuming.
 
-```{r}
+```{r tech14, cache = TRUE}
 poLCA.blrt(LCAE)
 # poLCA.blrt(LCA3)
 ```
 
-
+# New functions
 
 ## A `predict()` function
 
@@ -133,6 +131,9 @@ Another one to inspect the covariance matrice.
 poLCA.cov(LCAE, nclass = 3)
 # poLCA.cov(LCA3)
 ```
+
+<!-- ## A summary -->
+
 
 ## Bootstrap 3-step approach
 

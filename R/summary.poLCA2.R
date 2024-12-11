@@ -2,7 +2,6 @@
 #'
 #' @param object an object of class "poLCA2".
 #' @param alpha type I error rate. Default is .05.
-#' @param crit.rmsea A criterion for RMSEA. Default is .08.
 #' @param ... additional arguments affecting the summary produced.
 #'
 #' @return A data.frame containing the number of classes identified by different fit statistics.
@@ -12,8 +11,8 @@
 #' f2 <- cbind(V1, V2, V3, V4, V5, V6, V7) ~ 1
 #' LCAE <- poLCA(f2, nclass = 1:4, data = ex2.poLCA)
 #' summary(LCAE)
-summary.poLCA2 <- function(object, alpha = .05, crit.rmsea = .08, ...){
-  tech <- c("aic","bic","sabic","aic3","caic","chisq","gsq","poc","lmr","vlmr","blmr","bvlmr", "rmsea")
+summary.poLCA2 <- function(object, alpha = .05, ...){
+  tech <- c("aic","bic","sabic","aic3","caic","chisq","gsq","poc","lmr","vlmr","blrt","new")
   dec <- c(test.csq(object, stat = "aic",   alpha),
            test.csq(object, stat = "bic",   alpha),
            test.csq(object, stat = "sabic", alpha),
@@ -24,7 +23,9 @@ summary.poLCA2 <- function(object, alpha = .05, crit.rmsea = .08, ...){
            test.poc(object, alpha),
            test.lrt(object, alpha),
            test.blrt(object,alpha),
-           test.rmsea(object, crit.rmsea))
+           test.new(object, crit = .1)
+           #test.rmsea(object, crit.rmsea)
+  )
   rez <- data.frame(tech = tech, dec = dec)
   rez[rez == -999] <- NA
   rez
@@ -72,15 +73,13 @@ test.rmsea <- function(object, alpha){
 }
 
 test.blrt <- function(x, alpha){
-  out <- poLCA.blrt(x)$output[c("lmr.p","vlmr.p")]
-  apply(out,2, function(x) {
-    dec <- which(x > alpha)
-    if(length(dec) == 0){
-      -999  
-    }else{
-      min(dec)
-    }
-  })
+  out <- poLCA.blrt(x)
+  dec <- (which(out$output$p >= alpha))
+  if(length(dec) == 0){
+    -999  
+  }else{
+    min(dec)
+  }
 }
 
 test.lrt <- function(x, alpha){
@@ -94,3 +93,17 @@ test.lrt <- function(x, alpha){
     }
   })
 }
+
+test.new <- function(x, crit = .1){
+  xx <- t(sapply(x$LCA, function(x) poLCA.cov(x)$chi2))
+  chi2 <- xx[,1]
+  df <- xx[,2]
+  test <- sapply(chi2-df, function(x) max(x,0))/df#* n
+  dec <- which(test < crit)
+  if(length(dec) == 0){
+    -999  
+  }else{
+    min(dec)
+  }
+}
+

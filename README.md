@@ -118,8 +118,6 @@ poLCA.relentropy(LCA3)
 
     ## [1] 0.8396916
 
-## Two functions to carry likelihood ratio tests
-
 The Lo-Mendell-Rubin adjusted likelihood ratio test and the
 Vuong-Lo-Mendell-Rubin likelihood ratio test have been added.
 
@@ -142,25 +140,28 @@ poLCA.lrt(LCA3)
     ## $vlmr.p
     ## [1] 2.885461e-69
 
-Their equivalent bootstrapped likelihood ratio tests which are more
-generally recommended are also added. Note that the bootstrapped tests
-are quite slow.
+The bootstrapped Vuong-Lo-Mendell-Rubin likelihood ratio test which is
+more generally recommended is also added. Note that the bootstrapped
+tests are quite time-consuming.
 
 ``` r
 poLCA.blrt(LCAE)
 ```
 
-    ## Bootstrapped likelihood ratio tests 
+    ## Vuong-Lo-Mendell-Rubin Likelihood Ratio Test 
     ## 
-    ##  nclass npar      llik    vlmr     lmr df vlmr.p  lmr.p
-    ##       1    6 -2687.285                                 
-    ##       2   13 -2372.241 630.089 663.158  7 < .001 < .001
-    ##       3   20 -2188.950 366.582 385.822  7 < .001 < .001
-    ##       4   27 -2174.509  28.880  30.396  7 < .001 < .001
+    ##    test   H0_llik X2loglik_diff npar   mean   s.e.      p
+    ##  2 vs 1 -2687.896       645.222    7  8.503  4.249 < .001
+    ##  3 vs 2 -2365.285       338.928    7  9.423  4.188 < .001
+    ##  4 vs 3 -2195.821        11.102    7 12.085 36.009  0.260
+    ## 
+    ## At 95% condidence, blrt recommends 3 classes.
 
 ``` r
 # poLCA.blrt(LCA3)
 ```
+
+# New functions
 
 ## A `predict()` function
 
@@ -234,7 +235,7 @@ poLCA.cov(LCAE, nclass = 3)
     ## df    :     15 
     ## p     :     1.000 
     ## 
-    ## Top 15  covariances : 
+    ## Top 15 covariances : 
     ## 
     ##      pair Observed Expected  chi2     p
     ##  V5 ~~ V1    0.026    0.030 0.558 0.455
@@ -254,8 +255,10 @@ poLCA.cov(LCAE, nclass = 3)
     ##  V6 ~~ V5    0.025    0.025 0.000 0.988
 
 ``` r
-# poLCA.residual.cov(LCA3)
+# poLCA.cov(LCA3)
 ```
+
+<!-- ## A summary -->
 
 ## Bootstrap 3-step approach
 
