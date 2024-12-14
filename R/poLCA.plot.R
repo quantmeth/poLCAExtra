@@ -11,17 +11,17 @@
 #' @importFrom dplyr summarise group_by
 #' @importFrom tidyr gather
 #' 
-#' @export plot.classes
+#' @export poLCA.plot
 #'
 #' @examples
 #' f1 <- as.formula(cbind(V1, V2, V3, V4, V5, V6) ~ 1)
 #' LCA2 <- poLCA(f1, data = ex1.poLCA, nclass = 2)
 #' LCA3 <- poLCA(f1, data = ex1.poLCA, nclass = 3)
-#' plot.classes(LCA2, LCA3)
+#' poLCA.plot(LCA2, LCA3)
 #' LCAE <- poLCA(f1, data = ex1.poLCA, nclass = 2:3)
-#' plot.classes(LCAE)
-#' plot.classes(LCAE, nclass = 3)
-plot.classes <- function(x, ..., nclass = NULL, alpha = .05){
+#' poLCA.plot(LCAE)
+#' poLCA.plot(LCAE, nclass = 3)
+poLCA.plot <- function(x, ..., nclass = NULL, alpha = .05){
   
   if(!(inherits(x, "poLCA2") || inherits(x, "poLCA"))) stop("Please provide a poLCA or poLCA2 object.")
   

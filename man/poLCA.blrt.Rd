@@ -6,9 +6,23 @@
 \alias{poLCA.tech14}
 \title{Bootstrapped Likelihood Ratio Test}
 \usage{
-poLCA.blrt(object, nreps = 100, quick = TRUE, alpha = 0.05, ...)
+poLCA.blrt(
+  object,
+  nreps = 100,
+  quick = TRUE,
+  alpha = 0.05,
+  verbose = TRUE,
+  ...
+)
 
-poLCA.tech14(object, nreps = 100, quick = TRUE, alpha = 0.05, ...)
+poLCA.tech14(
+  object,
+  nreps = 100,
+  quick = TRUE,
+  alpha = 0.05,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{object}{an object of class "poLCA" or "poLCA2".}
@@ -18,6 +32,8 @@ poLCA.tech14(object, nreps = 100, quick = TRUE, alpha = 0.05, ...)
 \item{quick}{an option tostop faster with "poLCA2" objects. It will stop at the first \code{p < alpha}.}
 
 \item{alpha}{a type I error threshold to stop the blrt test.}
+
+\item{verbose}{option to display the spinner (\code{TRUE}) or not.}
 
 \item{...}{any other argument for \code{poLCA}.}
 }

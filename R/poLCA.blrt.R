@@ -4,6 +4,7 @@
 #' @param nreps the number of replications for the bootstrap. Default is 100.
 #' @param quick an option tostop faster with "poLCA2" objects. It will stop at the first \code{p < alpha}.
 #' @param alpha a type I error threshold to stop the blrt test.
+#' @param verbose option to display the spinner (\code{TRUE}) or not.
 #' @param ... any other argument for \code{poLCA}.
 #'
 #' @return A data frame containing mainly
@@ -30,7 +31,7 @@
 #' \dontrun{
 #' poLCA.blrt(out)
 #' }
-poLCA.blrt <- function(object, nreps = 100, quick = TRUE, alpha = .05,  ...){
+poLCA.blrt <- function(object, nreps = 100, quick = TRUE, alpha = .05,  verbose = TRUE,...){
   
   jd <- object$data
   N <- nrow(jd)
@@ -44,7 +45,7 @@ poLCA.blrt <- function(object, nreps = 100, quick = TRUE, alpha = .05,  ...){
     qwe <- object
     LCA <- object
   }
-
+  
   y <- colnames(qwe$y)
   K <- t(matrix(apply(qwe$y, 2, max)))
   test <- (min(P)>1) || (length(P) == 1)
@@ -55,12 +56,12 @@ poLCA.blrt <- function(object, nreps = 100, quick = TRUE, alpha = .05,  ...){
     
     flrt <- as.formula(paste0("cbind(", paste0(y, collapse = ","),")~", paste0(c(1, x[-1]), collapse = "+")))
     LCA <- c(list(poLCA(flrt,
-                      nclass = P[1],
-                      data = jd,
-                      verbose = FALSE,
-                      calc.se = FALSE)),#,#,
-                      #...),
-                LCA)
+                        nclass = P[1],
+                        data = jd,
+                        verbose = FALSE,
+                        calc.se = FALSE)),#,#,
+             #...),
+             LCA)
   }
   
   npar <- P - 1 + sum((K - 1)) * P
@@ -88,22 +89,26 @@ poLCA.blrt <- function(object, nreps = 100, quick = TRUE, alpha = .05,  ...){
   llike1 <- sapply(LCA, function(x) x$llik)
   llike2 <- 2*-(llike1[-length(llike1)]-llike1[-1])
   
+  
+  if(verbose)cat("poLCA.blrt() might takes some times. \n"); spinner <- c("/", "|", "\\", "-")
   for(k in 1:ncol(lca.idx)){
     for(i in 1:nreps){
+      #if(!(i%%10)) 
+      if(verbose) cat("\r", spinner[(i %% length(spinner)) + 1], "Calcul en cours", sep = " ")
       rez[lca.idx[,k],i] <- sapply(LCA[lca.idx[,k]], poLCA2.simulate)
     }
     #drez <- cbind(llike, rez)
     p.value <- apply(cbind(llike2, rez), 1, function(x) mean(x[-1] >= x[1]))
     if(quick && (any(na.omit(p.value) >= alpha))) break
   }
-  
+  if(verbose) cat("\r\u2714 done                      \n")
   ret <- list(output = na.omit(data.frame(test = paste0(P[-1]," vs ",P[-length(P)]),
-                    H0_llik = llike1[-length(llike1)],
-                    `2loglik_diff` = llike2,
-                    npar = npar[-1]-npar[-length(npar)],
-                    mean = rowMeans(rez),#rowMeans(drez[,-1]),
-                    `s.e.` = apply(rez,1,sd),
-                    p = p.value)))
+                                          H0_llik = llike1[-length(llike1)],
+                                          `2loglik_diff` = llike2,
+                                          npar = npar[-1]-npar[-length(npar)],
+                                          mean = rowMeans(rez),#rowMeans(drez[,-1]),
+                                          `s.e.` = apply(rez,1,sd),
+                                          p = p.value)))
   class(ret) <- c("poLCAblrt")
   return(ret)
 }

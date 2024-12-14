@@ -63,16 +63,16 @@ plot(LCAE, nclass = 3)
 There is also a new plot that works with a single LCA output.
 
 ```{r}
-plot.classes(LCA3)
+poLCA.plot(LCA3)
 ```
 
 Or all the LCA output, which may help to compare diffent number of classes.
 
 ```{r}
-plot.classes(LCAE)
+poLCA.plot(LCAE)
 # If only a subset is required
-# plot.classes(LCAE, nclass = 2:3)
-# plot.classes(LCA2, LCA3)
+# poLCA.plot(LCAE, nclass = 2:3)
+# poLCA.plot(LCA2, LCA3)
 ```
 
 # New features
