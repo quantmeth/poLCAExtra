@@ -2,6 +2,7 @@
 #'
 #' @param object an object of class "poLCA2".
 #' @param alpha type I error rate. Default is .05.
+#' @param blrt if poLCA.blrt should be carried out (quite time-consuming).
 #' @param ... additional arguments affecting the summary produced.
 #'
 #' @return A data.frame containing the number of classes identified by different fit statistics.
@@ -11,7 +12,7 @@
 #' f2 <- cbind(V1, V2, V3, V4, V5, V6, V7) ~ 1
 #' LCAE <- poLCA(f2, nclass = 1:4, data = ex2.poLCA)
 #' summary(LCAE)
-summary.poLCA2 <- function(object, alpha = .05, ...){
+summary.poLCA2 <- function(object, alpha = .05, blrt = TRUE, ...){
   tech <- c("aic","bic","sabic","aic3","caic","chisq","gsq","poc","lmr","vlmr","blrt","new")
   dec <- c(test.csq(object, stat = "aic",   alpha),
            test.csq(object, stat = "bic",   alpha),
@@ -20,14 +21,15 @@ summary.poLCA2 <- function(object, alpha = .05, ...){
            test.csq(object, stat = "caic",  alpha),
            test.csq(object, stat = "Chisq", alpha),
            test.csq(object, stat = "Gsq",   alpha),
-           test.poc(object, alpha),
-           test.lrt(object, alpha),
-           test.blrt(object,alpha),
+           test.poc(object, alpha = alpha),
+           test.lrt(object, alpha = alpha),
+           test.blrt(object, alpha = alpha, ...),#ifelse(blrt, do.call(test.blrt, list(object, alpha, ...)), NA), #test.blrt(object, alpha, ...)
            test.new(object, crit = .1)
            #test.rmsea(object, crit.rmsea)
   )
   rez <- data.frame(tech = tech, dec = dec)
   rez[rez == -999] <- NA
+  rez$dec <- rez$dec + min(sapply(object$LCA, function(x) length(x$P)))-1
   rez
 }
 
@@ -72,8 +74,8 @@ test.rmsea <- function(object, alpha){
   }
 }
 
-test.blrt <- function(x, alpha){
-  out <- poLCA.blrt(x)
+test.blrt <- function(x, alpha, ...){
+  out <- poLCA.blrt(x, ...)
   dec <- (which(out$output$p >= alpha))
   if(length(dec) == 0){
     -999  

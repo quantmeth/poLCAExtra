@@ -1,7 +1,7 @@
 Package: poLCAExtra
 Type: Package
 Title: New and Convenient Functions for the Package 'poLCA'
-Version: 0.0.1
+Version: 0.1
 Authors@R:
     c(person(given = "P.-O.",
              family = "Caron",
@@ -12,12 +12,11 @@ Description: New useful features for poLCA and convenient functions to increase 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Imports:
   poLCA (>= 1.6.0.0),
   nnet (>= 7.3-18),
   MASS (>= 7.3),
-  ggplot2 (>= 3.5),
+  ggplot2 (>= 3.3),
   dplyr (>= 1.1.2),
   tidyr (>= 1.3.0)
-  

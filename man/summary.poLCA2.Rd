@@ -4,12 +4,14 @@
 \alias{summary.poLCA2}
 \title{Summary results of object "poLCA2"}
 \usage{
-\method{summary}{poLCA2}(object, alpha = 0.05, ...)
+\method{summary}{poLCA2}(object, alpha = 0.05, blrt = TRUE, ...)
 }
 \arguments{
 \item{object}{an object of class "poLCA2".}
 
 \item{alpha}{type I error rate. Default is .05.}
+
+\item{blrt}{if poLCA.blrt should be carried out (quite time-consuming).}
 
 \item{...}{additional arguments affecting the summary produced.}
 }

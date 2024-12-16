@@ -31,7 +31,7 @@
 #' \dontrun{
 #' poLCA.blrt(out)
 #' }
-poLCA.blrt <- function(object, nreps = 100, quick = TRUE, alpha = .05,  verbose = TRUE,...){
+poLCA.blrt <- function(object, nreps = 100, quick = TRUE, alpha = .05,  verbose = TRUE, ...){
   
   jd <- object$data
   N <- nrow(jd)
