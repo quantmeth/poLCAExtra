@@ -7,7 +7,7 @@
 #' @param verbose option to display the spinner (\code{TRUE}) or not.
 #' @param ... any other argument for \code{poLCA}.
 #'
-#' @return A data frame containing mainly
+#' @return A data frame containing results of the Bootstrapped Likelihood Ratio Test.
 #' 
 #' @details This function can take some time especially with "poLCA2" class objects as they contain many "poLCA" objects. 
 #'

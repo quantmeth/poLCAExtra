@@ -87,7 +87,7 @@ test.blrt <- function(x, alpha, ...){
 test.lrt <- function(x, alpha){
   out <- sapply(x$LCA, .poLCA.clrt, y = x$LCA, stat =c("lmr.p","vlmr.p"))
   apply(out,1, function(x) {
-    dec <- which(x > alpha)
+    dec <- which(x > alpha)-1
     if(length(dec) == 0){
       -999  
     }else{
