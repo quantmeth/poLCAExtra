@@ -38,7 +38,7 @@ poLCA.tech14(
 \item{...}{any other argument for \code{poLCA}.}
 }
 \value{
-A data frame containing mainly
+A data frame containing results of the Bootstrapped Likelihood Ratio Test.
 }
 \description{
 Bootstrapped Likelihood Ratio Test

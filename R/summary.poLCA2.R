@@ -23,7 +23,7 @@ summary.poLCA2 <- function(object, alpha = .05, blrt = TRUE, ...){
            test.csq(object, stat = "Gsq",   alpha),
            test.poc(object, alpha = alpha),
            test.lrt(object, alpha = alpha),
-           test.blrt(object, alpha = alpha, ...),#ifelse(blrt, do.call(test.blrt, list(object, alpha, ...)), NA), #test.blrt(object, alpha, ...)
+           ifelse(blrt, do.call(test.blrt, list(object, alpha, ...)), NA), #test.blrt(object, alpha, ...)
            test.new(object, crit = .1)
            #test.rmsea(object, crit.rmsea)
   )
