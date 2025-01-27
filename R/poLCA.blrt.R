@@ -89,8 +89,9 @@ poLCA.blrt <- function(object, nreps = 100, quick = TRUE, alpha = .05,  verbose 
   llike1 <- sapply(LCA, function(x) x$llik)
   llike2 <- 2*-(llike1[-length(llike1)]-llike1[-1])
   
+  # TO PARALLEL ####
   
-  if(verbose)cat("poLCA.blrt() might takes some times. \n"); spinner <- c("/", "|", "\\", "-")
+  if(verbose) cat("poLCA.blrt() may take some times. \n"); spinner <- c("/", "|", "\\", "-")
   for(k in 1:ncol(lca.idx)){
     for(i in 1:nreps){
       #if(!(i%%10)) 

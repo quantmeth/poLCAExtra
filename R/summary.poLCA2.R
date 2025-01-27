@@ -11,7 +11,7 @@
 #' @examples
 #' f2 <- cbind(V1, V2, V3, V4, V5, V6, V7) ~ 1
 #' LCAE <- poLCA(f2, nclass = 1:4, data = ex2.poLCA)
-#' summary(LCAE)
+#' summary(LCAE, blrt = FALSE)
 summary.poLCA2 <- function(object, alpha = .05, blrt = TRUE, ...){
   tech <- c("aic","bic","sabic","aic3","caic","chisq","gsq","poc","lmr","vlmr","blrt","new")
   dec <- c(test.csq(object, stat = "aic",   alpha),
@@ -24,7 +24,7 @@ summary.poLCA2 <- function(object, alpha = .05, blrt = TRUE, ...){
            test.poc(object, alpha = alpha),
            test.lrt(object, alpha = alpha),
            ifelse(blrt, do.call(test.blrt, list(object, alpha, ...)), NA), #test.blrt(object, alpha, ...)
-           test.new(object, crit = .1)
+           test.new(object, crit = 1)
            #test.rmsea(object, crit.rmsea)
   )
   rez <- data.frame(tech = tech, dec = dec)
@@ -97,7 +97,7 @@ test.lrt <- function(x, alpha){
 }
 
 test.new <- function(x, crit = .1){
-  xx <- t(sapply(x$LCA, function(x) poLCA.cov(x)$chi2))
+  xx <- t(sapply(x$LCA, function(x) poLCA.cov(x)$chisq))
   chi2 <- xx[,1]
   df <- xx[,2]
   test <- sapply(chi2-df, function(x) max(x,0))/df#* n

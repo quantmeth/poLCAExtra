@@ -127,7 +127,7 @@ poLCA.residual.pattern(LCAE, nclass = 3)
 
 Another one to inspect the covariance matrice.
 
-```{r rescov, cache = TRUE}
+```{r rescov}
 poLCA.cov(LCAE, nclass = 3)
 # poLCA.cov(LCA3)
 ```

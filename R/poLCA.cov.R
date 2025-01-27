@@ -19,13 +19,13 @@ poLCA.cov <- function(x, nclass = NULL, ...){
   if(inherits(x, "poLCA2")) x <- x$LCA[[nclass]]
   
   probs <- x$probs
-  P <- x$P
+  if(is.null(nclass)) {nclass <- length(x$P)}
   n <- x$N
-  for(k in 1:length(P)){
+  for(k in 1:nclass){
     pr <- sapply(probs, function(x) x[k,], simplify = FALSE)
     it <- sapply(pr, function(x) 1:length(x), simplify = FALSE)
     egpr <- expand.grid(pr)
-    egpr$pr <- apply(egpr, 1, prod) * P[k]
+    egpr$pr <- apply(egpr, 1, prod) * x$P[k]
     if(k == 1){
       rez <- (cbind(expand.grid(it), pr = egpr$pr))
     } else {
@@ -43,34 +43,31 @@ poLCA.cov <- function(x, nclass = NULL, ...){
                                   function(x) {paste0(unlist(x), collapse = " ~~ ")}))
   stat$Observed <- cov(x$y)[lower.tri(ES)]
   stat$Expected <- ES[lower.tri(ES)]
-  stat$chi2 <- #(stat$Observed-stat$Expected)^2/stat$Expected * n
-    cortest(cor(x$y), cov2cor(ES), n)
-    #stat$chi2 = chi2[lower.tri(chi2)]
-    stat <- stat[order(-stat$chi2),]
-  stat$p <- pchisq(stat$chi2, 1, lower.tail = FALSE)
-  stat
-  chi2 <- c(chi2 = sum(stat$chi2), df = nrow(stat), p = pchisq(sum(stat$chi2), nrow(stat), lower.tail = FALSE),
-            RMSEA =  sqrt((sum(stat$chi2) / (x$npar- 1))/x$npar))
   
-  #,
-  #          SRMR = sqrt(sum((cor(x$y)-cov2cor(ES))[lower.tri(ES)]^2)/n))
-  #sqrt(mean((cor(x$y)-cov2cor(ES))^2))
-  
-  stat <- list(chi2 = chi2,
+  stat$chisq <- cortest(cor(x$y), cov2cor(ES), n)
+  stat <- stat[order(-stat$chisq),]
+  stat$p <- pchisq(stat$chisq, 1, lower.tail = FALSE)
+  #stat
+  chisq <- c(chisq = sum(stat$chisq), df = dof(nitem-1, nclass-1), p = pchisq(sum(stat$chisq), dof(nitem-1, nclass-1), lower.tail = FALSE))
+  #  SRMR = sqrt(sum((cor(x$y)-cov2cor(ES))[lower.tri(ES)]^2)/n))
+
+  stat <- list(chisq = chisq,
                stat = stat,
-               SigmaHat = ES)
+               SigmaHat = ES,
+               fml = fml(ES, cov(x$y)) * n,
+               RMSEA =  sqrt((sum(stat$chisq) / (x$npar- 1))/x$npar))
   class(stat) <- c("poLCA.cov")
   stat
 }
 
 #' @export
 print.poLCA.cov <- function(x, digit = 3, top = min(20, nrow(x$stat)), ...){
-  s <- x$chi2
+  s <- x$chisq
   x <- x$stat[1:top,]
   x[,-1] <- round(x[,-1], digit)
-  #x$chi2 <- round(x$chi2, digit)
+  #x$chisq <- round(x$chisq, digit)
   #x$p <- round(x$p, digit)
-  #x$Observed <- round(x$chi2, digit)
+  #x$Observed <- round(x$chisq, digit)
   #x$Expected <- round(x$p, digit)
   #x[,2:3] <- round(x[,2:3], digit)
   x$p <- ifelse(x$p < 10^-digit, paste0("p < ", 10^-digit), sprintf(paste0("%.", digit,"f"), x$p))
@@ -91,7 +88,7 @@ tri.names <- function(x){
   idx <- which(lower.tri(x, diag = FALSE), arr.ind = TRUE)
   cbind(rownames(x)[idx[, 1]], colnames(x)[idx[, 2]])
 }
-# tri.names(chi2)
+# tri.names(chisq)
 
 cortest <- function(R1, R2, n) {
   
@@ -102,4 +99,13 @@ cortest <- function(R1, R2, n) {
   Z2 <- 0.5 * log((1 + R2) / (1 - R2))
   Z <- (Z1 - Z2)^2 * (n-3)
   Z[lower.tri(Z)]
+}
+
+fml <- function(S, R, p = ncol(S)) {
+  #maximum likelihood
+  log(det(R)) - log(det(S)) + sum(diag(S%*%solve(R))) - (p)
+}
+
+dof <- function(nv, i = 0:nv){
+  (nv-i)*(nv-i-1)/2 - i
 }

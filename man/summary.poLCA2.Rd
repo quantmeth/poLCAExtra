@@ -24,5 +24,5 @@ Summary results of object "poLCA2"
 \examples{
 f2 <- cbind(V1, V2, V3, V4, V5, V6, V7) ~ 1
 LCAE <- poLCA(f2, nclass = 1:4, data = ex2.poLCA)
-summary(LCAE)
+summary(LCAE, blrt = FALSE)
 }

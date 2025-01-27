@@ -12,7 +12,8 @@
 poLCA.rmsea <- function(object){
   if(inherits(object, "poLCA")){
     #object <- list(LCA = object)
-    poLCA.cov(object)$chi2[[4]]
+    poLCA.cov(object)[[5]]
   } 
-  sapply(sapply(object$LCA, poLCA.cov)[1,], function(x) x)[4,]
+  #sapply(sapply(object$LCA, poLCA.cov)[5], function(x) x)[4,]
+  unlist(sapply(object$LCA, poLCA.cov)[5,])
 }
