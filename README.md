@@ -232,12 +232,12 @@ poLCA.cov(LCAE, nclass = 3)
 
     ## Relevant statistics : 
     ## Chisq :     1.807 
-    ## df    :     15 
-    ## p     :     1.000 
+    ## df    :     4 
+    ## p     :     0.771 
     ## 
     ## Top 15 covariances : 
     ## 
-    ##      pair Observed Expected  chi2     p
+    ##      pair Observed Expected chisq     p
     ##  V5 ~~ V1    0.026    0.030 0.558 0.455
     ##  V2 ~~ V1    0.032    0.029 0.449 0.503
     ##  V6 ~~ V4    0.064    0.062 0.230 0.631
